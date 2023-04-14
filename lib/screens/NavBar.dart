@@ -5,22 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniconnect/screens/login_screen.dart';
 import 'package:uniconnect/screens/profile_view.dart';
+import "package:share_plus/share_plus.dart";
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    showAlertDialog(BuildContext context){
+    showAlertDialog(BuildContext context) {
       Widget cancelButton = TextButton(
-        child: Text("Cancel"),
+        child: const Text("Cancel"),
         onPressed: () {
           Navigator.pop(context);
         },
       );
       Widget continueButton = TextButton(
-        child: Text("Exit"),
+        child: const Text("Exit"),
         onPressed: () {
           SystemNavigator.pop();
         },
@@ -28,8 +28,45 @@ class NavBar extends StatelessWidget {
 
       // set up the AlertDialog
       AlertDialog alert = AlertDialog(
-        title: Text("Confirm exit"),
-        content: Text("Are you sure you want to exit UniConnect?"),
+        title: const Text("Confirm exit"),
+        content: const Text("Are you sure you want to exit UniConnect?"),
+        actions: [
+          cancelButton,
+          continueButton,
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
+    showAlertDialogLogout(BuildContext context) {
+      Widget cancelButton = TextButton(
+        child: const Text("Cancel"),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      );
+      Widget continueButton = TextButton(
+        child: const Text("Logout"),
+        onPressed: () {
+          FirebaseAuth.instance.signOut();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => const LoginScreen()
+              ), (route) => false);
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: const Text("Confirm Logout"),
+        content: const Text("Are you sure you want to logout?"),
         actions: [
           cancelButton,
           continueButton,
@@ -45,7 +82,6 @@ class NavBar extends StatelessWidget {
       );
     }
     User? user = FirebaseAuth.instance.currentUser;
-    final firestore = FirebaseFirestore.instance;
     String accountEmail = "example@gmail.com";
 
     // If the user is not null, update the account name and email
@@ -60,13 +96,14 @@ class NavBar extends StatelessWidget {
           UserAccountsDrawerHeader(
             accountName: StreamBuilder(
               stream: FirebaseFirestore.instance
-              .collection("users")
-              .doc(FirebaseAuth.instance.currentUser?.uid)
-              .snapshots(),
+                  .collection("users")
+                  .doc(FirebaseAuth.instance.currentUser?.uid)
+                  .snapshots(),
               builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+                  AsyncSnapshot<
+                      DocumentSnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('Loading...');
+                  return const Text('Loading...');
                 }
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
@@ -81,7 +118,8 @@ class NavBar extends StatelessWidget {
                   .doc(FirebaseAuth.instance.currentUser?.uid)
                   .snapshots(),
               builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+                  AsyncSnapshot<
+                      DocumentSnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return SizedBox(
                     width: 90,
@@ -95,19 +133,48 @@ class NavBar extends StatelessWidget {
                 final profileImageUrl = snapshot.data!['profilepic'];
                 return CircleAvatar(
                   child: ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: profileImageUrl,
-                      width: 90,
-                      height: 90,
-                      placeholder: (context, url) =>
-                          ClipOval(
-                            child: Image.asset('assets/loading.gif',
-                              width: 90,
-                              height: 90,
-                              fit: BoxFit.cover,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            PageRouteBuilder(
+                              transitionDuration: Duration(milliseconds: 500),
+                              pageBuilder: (BuildContext context,
+                                  Animation<double> animation,
+                                  Animation<double> secAnimation) {
+                                return const ProfileView();
+                              },
+                              transitionsBuilder: (context, animation,
+                                  secAnimation, child) {
+                                var begin = Offset(-1.0, 0.0);
+                                var end = Offset.zero;
+                                var curve = Curves.ease;
+                                var tween = Tween(begin: begin, end: end).chain(
+                                    CurveTween(curve: curve));
+                                var curvedAnimation = CurvedAnimation(
+                                    parent: animation, curve: curve);
+                                return SlideTransition(
+                                  position: tween.animate(curvedAnimation),
+                                  child: child,
+                                );
+                              },
+                            )
+                        );
+                      },
+                      child: CachedNetworkImage(
+                        imageUrl: profileImageUrl,
+                        width: 90,
+                        height: 90,
+                        placeholder: (context, url) =>
+                            ClipOval(
+                              child: Image.asset(
+                                'assets/loading.gif',
+                                width: 90,
+                                height: 90,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                      fit: BoxFit.cover,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 );
@@ -118,64 +185,65 @@ class NavBar extends StatelessWidget {
               image: DecorationImage(
                   fit: BoxFit.fill,
                   image: AssetImage(
-                      'assets/background/navbar_bg.jpg',)),
+                    'assets/background/navbar_bg.jpg',)),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.account_circle_sharp),
             title: const Text('Profile'),
-            onTap: (){
+            onTap: () {
               Navigator.push(context,
                   PageRouteBuilder(
                     transitionDuration: Duration(milliseconds: 500),
-                    pageBuilder: (BuildContext context,Animation<double> animation,Animation<double> secAnimation){
+                    pageBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secAnimation) {
                       return const ProfileView();
                     },
-                    transitionsBuilder: (context,animation,secAnimation,child){
-                      var begin= Offset(-1.0, 0.0);
-                      var end=Offset.zero;
-                      var curve= Curves.ease;
-                      var tween= Tween(begin: begin,end: end).chain(CurveTween(curve: curve));
-                      var curvedAnimation = CurvedAnimation(parent: animation,curve: curve);
+                    transitionsBuilder: (context, animation, secAnimation,
+                        child) {
+                      var begin = Offset(-1.0, 0.0);
+                      var end = Offset.zero;
+                      var curve = Curves.ease;
+                      var tween = Tween(begin: begin, end: end).chain(
+                          CurveTween(curve: curve));
+                      var curvedAnimation = CurvedAnimation(
+                          parent: animation, curve: curve);
                       return SlideTransition(
                         position: tween.animate(curvedAnimation),
                         child: child,
                       );
                     },
                   )
-                  );
+              );
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Friends'),
-            onTap: () {},
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.person),
+          //   title: const Text('Friends'),
+          //   onTap: () {},
+          // ),
           ListTile(
             leading: const Icon(Icons.share),
             title: const Text('Share'),
-            onTap: () {},
+            onTap: () {
+              Share.share(
+                  "Check out this app!\nYou can download it from here: https://drive.google.com/drive/folders/1i3bdZ1h2DDMpYw6tI4jGEOlUsdY1Gu9m?usp=sharing !!\nShared from UniConnect");
+            },
           ),
           const ListTile(
-            leading: Icon(Icons.notifications),
-            title: Text('Request'),
+            leading: Icon(Icons.lightbulb_outline),
+            title: Text('Request a feature'),
           ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: (){},
+          const ListTile(
+            leading: Icon(Icons.bug_report),
+            title: Text('Report a bug'),
           ),
-          const Divider(),
           ListTile(
             title: const Text('Logout'),
             leading: const Icon(Icons.logout),
-            onTap: (){
-              FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (context)=> const LoginScreen()
-                  ), (route) => false);
+            onTap: () {
+              showAlertDialogLogout(context);
             },
           ),
           ListTile(

@@ -158,18 +158,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:intl/date_symbols.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:uniconnect/resources/firestore_methods.dart';
 import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/util/utils.dart';
 
-import '../models/user.dart' as model;
-import '../models/user.dart';
-import '../providers/providers.dart';
-import '../widgets/text_field_input.dart';
 
 class Carpool_upload_post extends StatefulWidget {
   const Carpool_upload_post({super.key});
@@ -277,7 +270,6 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
   }
   @override
   Widget build(BuildContext context) {
-    final model.User? user = Provider.of<UserProvider>(context).getUser;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
@@ -320,7 +312,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
             ),
           ),
           SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
               child: Column(
@@ -332,7 +324,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
                   buildTextField("Exact destination address:", "Enter the exact destination address", exactdestinationController, false),
                   TextFormField(
                     enabled: false,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Date and Time',
                     ),
                     controller: _textEditingController,
@@ -342,7 +334,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
                     onPressed: () {
                       _showDateTimePicker(context);
                     },
-                    child: Text('Select date and time'),
+                    child: const Text('Select date and time'),
                   ),
                   buildTextField("Vehicle of Choice:", "Enter the vehicle of choice", vehicleController, false),
                   buildTextField("Expected charge per head:", "Enter the expected charge", expectedPerHeadChargeController, true),
@@ -380,7 +372,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
         );
         if (selectedDateTime.isBefore(DateTime.now())) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Selected time is before current time.'),
             ),
           );
@@ -444,7 +436,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
       }
     if(isLessThanHalfHourFromNow(selectedDateTime))
       {
-        showSnackBar("Time should be at least half an hour from now", context);
+        showSnackBar("Requests should be made at least half an hour before departure", context);
         return false;
       }
     if(startController.text.length>15)
@@ -476,7 +468,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
   }
   bool isLessThanHalfHourFromNow(DateTime dateTime) {
     final now = DateTime.now();
-    final halfHourFromNow = now.add(Duration(minutes: 30));
+    final halfHourFromNow = now.add(const Duration(minutes: 30));
     return dateTime.isBefore(halfHourFromNow);
   }
 

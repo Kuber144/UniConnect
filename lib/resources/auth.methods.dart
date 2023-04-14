@@ -52,10 +52,14 @@ class AuthMethods {
           degree: degree,
           gradyear: gradyear,
         );
+
+        // Send verification email
+        await cred.user!.sendEmailVerification();
+
         //add user to our database
         await firestore.collection('users').doc(cred.user!.uid).set(
-              user.toJson(),
-            );
+          user.toJson(),
+        );
 
         res = "Success";
       }
@@ -66,14 +70,22 @@ class AuthMethods {
     return res;
   }
 
+
   // logging in user
   Future<String> loginUser(
       {required String email, required String password}) async {
     String res = "Some error occurred";
     try {
       if (email.isNotEmpty && password.isNotEmpty) {
+        UserCredential cred =
         await auth.signInWithEmailAndPassword(email: email, password: password);
-        res = "Success";
+
+        if (cred.user!.emailVerified) {
+          res = "Success";
+        } else {
+          await auth.signOut(); // Sign out the user
+          res = "Please verify your email before logging in.";
+        }
       } else {
         res = "Please enter all the fields";
       }
@@ -82,4 +94,5 @@ class AuthMethods {
     }
     return res;
   }
+
 }

@@ -39,12 +39,15 @@
 import 'dart:async';
 
 // import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:uniconnect/screens/MyWebView.dart';
 import 'package:uniconnect/screens/carpool_feed.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
 import 'package:uniconnect/screens/chat_home_page.dart';
+import 'package:uniconnect/screens/mess_feedback_feed.dart';
 import 'package:uniconnect/util/slideshow.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -95,7 +98,32 @@ class _HomePageState extends State<HomePage> {
     'assets/slideshow_pics/ss_2.jpg',
     'assets/slideshow_pics/ss_3.jpg',
   ];
+  String imageUrl="https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/default_prof.jpg?alt=media&token=2488a918-e680-4445-a04b-5627c62dcf46";
+  String name='';
+  String email='';
+  String bio="",hostel=" ",degree="",gradyear="",phone="";
 
+  Future<void> getUserDetails() async {
+    String uid= FirebaseAuth.instance.currentUser!.uid;
+
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    if(userSnapshot.exists){
+      setState(() {
+        name= userSnapshot['username'];
+        email=userSnapshot['email'];
+        bio=userSnapshot['bio'];
+        hostel=userSnapshot['hostel'];
+        phone=userSnapshot["phone"];
+        degree=userSnapshot["degree"];
+        gradyear=userSnapshot["gradyear"];
+      });
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    getUserDetails();
+  }
   @override
   Widget build(BuildContext context) {
     // model.User user = Provider.of<UserProvider>(context).getUser;
@@ -251,13 +279,13 @@ class _HomePageState extends State<HomePage> {
                           title: 'BUY n SELL',
                           icon:  'assets/inner_icons/buy_sell.png',
                           onTap: () {
-                            // if(mounted){
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //       builder: (context) => const Buy_sell_p1(),
-                            //     ),
-                            //   );}
+                            if(mounted){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const WebViewApp(),
+                                ),
+                              );}
                             },
                         ),
                         MyCardMenu(
@@ -288,9 +316,9 @@ class _HomePageState extends State<HomePage> {
                         MyCardMenu(
                           title: 'GAMES',
                           icon:   'assets/inner_icons/games.png',
-                          onTap:() {},
+                          onTap:() {
+                          },
                         ),
-
                       ],
                     ),
                     const SizedBox(height: 28),
@@ -300,7 +328,46 @@ class _HomePageState extends State<HomePage> {
                         MyCardMenu(
                           title: 'MESS',
                           icon:   'assets/inner_icons/mess_feedback.png',
-                          onTap:() {},
+                          onTap:() async {
+                            await getUserDetails();
+                            if(hostel!="Not selected yet")
+                              {
+                                if(mounted){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Mess_Feed(),
+                                    ),
+                                  );}
+                              }
+                            else{
+                              print(hostel);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return WillPopScope(
+                                    onWillPop: () async {
+                                      // Do nothing when user tries to dismiss the dialog by pressing back button
+                                      return false;
+                                    },
+                                    child: AlertDialog(
+                                      title: const Text("Select hostel first!"),
+                                      content: const Text("Please go into your profile and select your hostel by editing your profile."),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+
+                          },
                         ),
                         MyCardMenu(
                           title: 'SHARE NOTES',
@@ -336,7 +403,6 @@ class _HomePageState extends State<HomePage> {
     ),
     );
   }
-
 }
 
 class MyCardMenu extends StatefulWidget {

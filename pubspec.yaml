@@ -27,6 +27,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_inappwebview: ^5.7.2+3
+  share_plus: ^6.3.1
+  webview_flutter: ^4.0.7
+  url_launcher: ^6.1.10
   flutter_datetime_picker: ^1.5.1
   cached_network_image: ^3.0.0
   cloud_firestore: ^4.4.5
