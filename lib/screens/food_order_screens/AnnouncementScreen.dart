@@ -1,16 +1,15 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uniconnect/screens/carpool_My_Requests.dart';
-import 'package:uniconnect/screens/carpool_upload_post.dart';
-import 'package:uniconnect/screens/post_card.dart';
-import 'package:uniconnect/util/colors.dart';
+import 'package:uniconnect/screens/food_order_screens/upload_Announcement.dart';
 
-import '../main.dart';
+import '../../main.dart';
+import '../../util/colors.dart';
+import '../post_card.dart';
 
-class FeedScreen extends StatelessWidget {
-  const FeedScreen({Key? key}) : super(key: key);
+
+class AnnouncementScreen extends StatelessWidget {
+  const AnnouncementScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,33 +19,30 @@ class FeedScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: const Text(
-          "Carpool"
+            "Offer Announcements"
         ),
-        actions: [
-          _buildPopupMenuButton(context),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: "Post a Carpool request",
+        tooltip: "Post an Offer Announcement",
         onPressed: () {
           Navigator.push(context,
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 150),
-              transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child){
-                return ScaleTransition(
-                  alignment: Alignment.bottomRight,
-                    scale: animation,
-                        child: child,
-                );
-              },
-              pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation){
-                return const Carpool_upload_post();
-              }
-            ));
+              PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 150),
+                  transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child){
+                    return ScaleTransition(
+                      alignment: Alignment.bottomRight,
+                      scale: animation,
+                      child: child,
+                    );
+                  },
+                  pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation){
+                    return const upload_Announcement();
+                  }
+              ));
         },
         backgroundColor: iconcolor,
-          child: const Icon(Icons.add),
-        ),
+        child: const Icon(Icons.add),
+      ),
       body: Stack(
         children: [
           Image.asset(
@@ -56,7 +52,7 @@ class FeedScreen extends StatelessWidget {
             height: double.infinity,
           ),
           StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+            stream: FirebaseFirestore.instance.collection('Offer Announcement Posts').snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -85,16 +81,16 @@ class FeedScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
-                itemCount: filteredDocs.length,
-                itemBuilder: (context,index)=> Column(
-                children: [
-                    PostCard(
-                  snap: filteredDocs[index].data() ?? {}, hello: uuid.v4(),
+                  itemCount: filteredDocs.length,
+                  itemBuilder: (context,index)=> Column(
+                    children: [
+                      PostCard(
+                        snap: filteredDocs[index].data() ?? {}, hello: uuid.v4(),
+                      ),
+                      const SizedBox(height: 13,),
+                    ],
+                  ),
                 ),
-                  const SizedBox(height: 13,),
-                ],
-                ),
-              ),
               );
             },
           ),
@@ -102,22 +98,4 @@ class FeedScreen extends StatelessWidget {
       ),
     );
   }
-  Widget _buildPopupMenuButton(BuildContext context) {
-    return PopupMenuButton<String>(
-      onSelected: (String result) {
-        // navigate to MyRequestsScreen
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const My_Requests()),
-        );
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        const PopupMenuItem<String>(
-          value: 'my-requests',
-          child: Text('My Requests'),
-        ),
-      ],
-    );
-  }
-
 }
