@@ -6,19 +6,18 @@ import 'MenuScreen.dart';
 
 
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class Food_Home_Page extends StatefulWidget {
+  const Food_Home_Page({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _Food_Home_PageState createState() => _Food_Home_PageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _Food_Home_PageState extends State<Food_Home_Page> {
   int _selectedIndex = 0;
 
   final List<Widget> _widgetOptions = <Widget>[
     AnnouncementScreen(),
-    FoodOrderRequests(),
     MenuScreen(),
   ];
 
@@ -43,13 +42,13 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Announcements',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.fastfood),
-            label: 'Food Requests',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.slideshow),
+            icon: Icon(Icons.menu_book_outlined),
             label: 'Menu',
           ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.slideshow),
+          //   label: 'Menu',
+          // ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,

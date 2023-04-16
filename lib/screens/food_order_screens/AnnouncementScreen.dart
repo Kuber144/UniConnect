@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:uniconnect/screens/food_order_screens/upload_Announcement.dart';
 
 import '../../main.dart';
+import '../../models/post_card_food.dart';
 import '../../util/colors.dart';
-import '../post_card.dart';
 
 
 class AnnouncementScreen extends StatelessWidget {
@@ -60,7 +60,11 @@ class AnnouncementScreen extends StatelessWidget {
                 );
               }
               final Timestamp currentTime = Timestamp.now();
-              final filteredDocsLate = snapshot.data!.docs.where((doc) => doc['timeOfDeparture'] is Timestamp && doc['timeOfDeparture'].compareTo(currentTime) < 0).toList();
+              final Duration duration = Duration(days: 15);
+              final filteredDocsLate = snapshot.data!.docs.where((doc) =>
+              doc['datePublished'] is Timestamp &&
+                  currentTime.toDate().difference(doc['datePublished'].toDate()).compareTo(duration) > 0,
+              ).toList();
               if (filteredDocsLate.isNotEmpty) {
                 for (final doc in filteredDocsLate) {
                   doc.reference.delete().then((value) {
@@ -70,7 +74,7 @@ class AnnouncementScreen extends StatelessWidget {
                   });
                 }
               }
-              final filteredDocs = snapshot.data!.docs.where((doc) => doc['uid'] != currentUserId).toList();
+              final filteredDocs = snapshot.data!.docs.toList();
               if (filteredDocs.isEmpty) {
                 return const Center(
                   child: Text('No data'),
@@ -85,7 +89,7 @@ class AnnouncementScreen extends StatelessWidget {
                   itemBuilder: (context,index)=> Column(
                     children: [
                       PostCard(
-                        snap: filteredDocs[index].data() ?? {}, hello: uuid.v4(),
+                        snap: filteredDocs[index].data() ?? {},
                       ),
                       const SizedBox(height: 13,),
                     ],
