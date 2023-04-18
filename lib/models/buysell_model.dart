@@ -1,12 +1,14 @@
+// import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Buysell_Model {
   final String uid;
-  final  String pic;
+  final  List<String> pic;
   final String  pdtName;
   final String pdtDesc;
   final  String sellingPrice;
-  final String phno;
+  //final String phno;
   final String postId;
   final datePublished;
 
@@ -16,7 +18,7 @@ class Buysell_Model {
     required this.pdtName,
     required this.pdtDesc,
     required this.sellingPrice,
-    required this.phno,
+    //required this.phno,
     required this.postId,
     required this.datePublished,
   });
@@ -28,7 +30,7 @@ class Buysell_Model {
     "pdtName":pdtName,
     "pdtDesc":pdtDesc,
     "sellingPrice":sellingPrice,
-    "phno":phno,
+    //"phno":phno,
     "postId":postId,
     "datePublished":datePublished,
   };
@@ -42,7 +44,7 @@ class Buysell_Model {
       pdtName: snapshot['pdtName'],
       pdtDesc: snapshot['pdtDesc'],
       sellingPrice: snapshot['sellingPrice'],
-      phno: snapshot['phno'],
+      //phno: snapshot['phno'],
       postId: snapshot['postId'],
       datePublished: snapshot['datePublished'],
     );

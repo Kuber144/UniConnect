@@ -108,13 +108,13 @@ class _HomePageState extends State<HomePage> {
         showAlertDialog(context);
         return true;
       },
-    child:Scaffold(
-      drawer: const NavBar(),
-      // backgroundColor: Colors.indigo.shade50,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          User? currentUser = FirebaseAuth.instance.currentUser;
-          if(currentUser != null) {
+      child:Scaffold(
+        drawer: const NavBar(),
+        // backgroundColor: Colors.indigo.shade50,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            User? currentUser = FirebaseAuth.instance.currentUser;
+            if(currentUser != null) {
               UserModel? thisUserModel =  await FirebaseHelper.getUserModelById(currentUser.uid);
               if(thisUserModel != null){
                 if(mounted){
@@ -127,230 +127,230 @@ class _HomePageState extends State<HomePage> {
               }
             }
           },
-        child: Icon(Icons.chat),
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/home_bg.png'),
-                  fit: BoxFit.cover,
+          child: Icon(Icons.chat),
+        ),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/home_bg.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-        Container(
-          margin: const EdgeInsets.only(top: 18, left: 24, right: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Container(
+                margin: const EdgeInsets.only(top: 18, left: 24, right: 24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
-                    Builder(
-                        builder: (BuildContext context){
-                          return IconButton(
-                            icon: const Icon(Icons.menu),
-                            onPressed: () {
-                              Scaffold.of(context).openDrawer();
-                            },
-                          );
-                        },
-                    ),
-                    const Text(
-                          'Home Page',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.indigo,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                    Builder(
-                        builder: (BuildContext context){
-                          return GestureDetector(
-                            onTap: () {
-                              Scaffold.of(context).openDrawer();
-                            },
-                            child: SizedBox(
-                              height: 40,
-                              width: 40,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.asset('assets/logo_png.png'),
-                              ),
-                            ),
-                          );
-                        } ),
-                  ]
-              ),
-              Expanded(
-                child: ListView(
-                  physics: const BouncingScrollPhysics(),
-                  children: [
-                    const SizedBox(height: 32),
-
-                    SizedBox(
-                      height: 300,
-                      child: Slideshow(images: images),
-                    ),
-
-                    const SizedBox(height: 16),
-                    const Center(
-                      child: Text(
-                        'Choose Option',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 48),
-                    const Text(
-                      'SERVICES',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MyCardMenu(
-                          title: 'BUY n SELL',
-                          icon:  'assets/inner_icons/buy_sell.png',
-                          onTap: () {
-                            if(mounted){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const WebViewApp(),
-                                ),
-                              );}
-                            },
-                        ),
-                        MyCardMenu(
-                          title: 'CARPOOL',
-                          icon:  'assets/inner_icons/carpool.png',
-                          onTap: () {
-                            if(mounted){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const FeedScreen(),
-                              ),
-                            );}},
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 28),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MyCardMenu(
-                          title: 'FOOD ORDERS',
-                          icon:   'assets/inner_icons/food_order.png',
-                          onTap:() {
-                            if(mounted){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Food_Home_Page(),
-                                ),
-                              );}
-                          },
-                        ),
-                        MyCardMenu(
-                          title: 'GAMES',
-                          icon:   'assets/inner_icons/games.png',
-                          onTap:() {
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 28),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        MyCardMenu(
-                          title: 'MESS',
-                          icon:   'assets/inner_icons/mess_feedback.png',
-                          onTap:() async {
-                            await getUserDetails();
-                            if(hostel!="Not selected yet")
-                              {
-                                if(mounted){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Mess_Feed(),
-                                    ),
-                                  );}
-                              }
-                            else{
-                              print(hostel);
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return WillPopScope(
-                                    onWillPop: () async {
-                                      // Do nothing when user tries to dismiss the dialog by pressing back button
-                                      return false;
-                                    },
-                                    child: AlertDialog(
-                                      title: const Text("Select hostel first!"),
-                                      content: const Text("Please go into your profile and select your hostel by editing your profile."),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("OK"),
-                                        ),
-                                      ],
-                                    ),
-                                  );
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+
+                          Builder(
+                            builder: (BuildContext context){
+                              return IconButton(
+                                icon: const Icon(Icons.menu),
+                                onPressed: () {
+                                  Scaffold.of(context).openDrawer();
                                 },
                               );
-                            }
-
-                          },
-                        ),
-                        MyCardMenu(
-                          title: 'SHARE NOTES',
-                          icon:   'assets/inner_icons/notes_sharing.png',
-                          onTap:() {
-                            if(mounted){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const notesFeedScreen(),
-                                ),
-                              );}
-                          },
-                        ),
-
-                      ],
+                            },
+                          ),
+                          const Text(
+                            'Home Page',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.indigo,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Builder(
+                              builder: (BuildContext context){
+                                return GestureDetector(
+                                  onTap: () {
+                                    Scaffold.of(context).openDrawer();
+                                  },
+                                  child: SizedBox(
+                                    height: 40,
+                                    width: 40,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.asset('assets/logo_png.png'),
+                                    ),
+                                  ),
+                                );
+                              } ),
+                        ]
                     ),
+                    Expanded(
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        children: [
+                          const SizedBox(height: 32),
 
-                    const SizedBox(height: 35),
-                    const SizedBox(height: 35),
-                    // const SizedBox(height: 28),
-                    // const SizedBox(height: 28),
-                    // const SizedBox(height: 28),
+                          SizedBox(
+                            height: 300,
+                            child: Slideshow(images: images),
+                          ),
+
+                          const SizedBox(height: 16),
+                          const Center(
+                            child: Text(
+                              'Choose Option',
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 48),
+                          const Text(
+                            'SERVICES',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              MyCardMenu(
+                                title: 'BUY n SELL',
+                                icon:  'assets/inner_icons/buy_sell.png',
+                                onTap: () {
+                                  if(mounted){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const Buy_sell_p1(),
+                                      ),
+                                    );}
+                                },
+                              ),
+                              MyCardMenu(
+                                title: 'CARPOOL',
+                                icon:  'assets/inner_icons/carpool.png',
+                                onTap: () {
+                                  if(mounted){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const FeedScreen(),
+                                      ),
+                                    );}},
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 28),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              MyCardMenu(
+                                title: 'FOOD ORDERS',
+                                icon:   'assets/inner_icons/food_order.png',
+                                onTap:() {
+                                  if(mounted){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const Food_Home_Page(),
+                                      ),
+                                    );}
+                                },
+                              ),
+                              MyCardMenu(
+                                title: 'GAMES',
+                                icon:   'assets/inner_icons/games.png',
+                                onTap:() {
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 28),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              MyCardMenu(
+                                title: 'MESS',
+                                icon:   'assets/inner_icons/mess_feedback.png',
+                                onTap:() async {
+                                  await getUserDetails();
+                                  if(hostel!="Not selected yet")
+                                  {
+                                    if(mounted){
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const Mess_Feed(),
+                                        ),
+                                      );}
+                                  }
+                                  else{
+                                    print(hostel);
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return WillPopScope(
+                                          onWillPop: () async {
+                                            // Do nothing when user tries to dismiss the dialog by pressing back button
+                                            return false;
+                                          },
+                                          child: AlertDialog(
+                                            title: const Text("Select hostel first!"),
+                                            content: const Text("Please go into your profile and select your hostel by editing your profile."),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("OK"),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+
+                                },
+                              ),
+                              MyCardMenu(
+                                title: 'SHARE NOTES',
+                                icon:   'assets/inner_icons/notes_sharing.png',
+                                onTap:() {
+                                  if(mounted){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const notesFeedScreen(),
+                                      ),
+                                    );}
+                                },
+                              ),
+
+                            ],
+                          ),
+
+                          const SizedBox(height: 35),
+                          const SizedBox(height: 35),
+                          // const SizedBox(height: 28),
+                          // const SizedBox(height: 28),
+                          // const SizedBox(height: 28),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
         ),
-      ],
       ),
-      ),
-    ),
     );
   }
 }
@@ -423,4 +423,3 @@ class _MyCardMenuState extends State<MyCardMenu> {
     );
   }
 }
-
