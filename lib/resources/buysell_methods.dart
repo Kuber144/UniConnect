@@ -47,6 +47,8 @@
 //   }
 // }
 
+//import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/models/buysell_model.dart';
@@ -60,17 +62,17 @@ class BuySellMethods {
   //upload Post
   Future<String> uploadPost(
       String uid,
-      String pic,
+      List<String> pic,
       String  pdtName,
       String pdtDesc,
       String sellingPrice,
-      String phno,
+      //String phno,
       String postId,
 
       ) async {
     String res = "some error occurred";
     try {
-      String postId = const Uuid().v1();
+      //String postId = const Uuid().v1();
       print(postId);
       print(uid);
       Buysell_Model post = Buysell_Model(
@@ -80,15 +82,16 @@ class BuySellMethods {
         pdtDesc: pdtDesc,
         sellingPrice: sellingPrice,
         datePublished: DateTime.now(),
-        phno: phno,
+        //phno: phno,
 
         postId: postId,
 
       );
 
-      FirebaseFirestore.instance.collection('posts').doc(postId).set(
+      FirebaseFirestore.instance.collection('buy_sell_posts').doc(postId).set(
         post.toJson(),
       );
+
 
       res="success";
     } catch (e) {
@@ -97,4 +100,5 @@ class BuySellMethods {
     }
     return res;
   }
+
 }

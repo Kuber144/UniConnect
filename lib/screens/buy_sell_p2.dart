@@ -1,162 +1,10 @@
-// // import 'dart:html';
-//
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:uniconnect/resources/firestore_methods.dart';
-// import 'package:uniconnect/util/colors.dart';
-// import 'package:uniconnect/util/utils.dart';
-//
-// import '../models/user.dart' as model;
-// import '../providers/providers.dart';
-// import '../widgets/text_field_input.dart';
-//
-// class Carpool_upload_post extends StatefulWidget {
-//   const Carpool_upload_post({super.key});
-//
-//   @override
-//   State<Carpool_upload_post> createState() => _Carpool_upload_postState();
-// }
-//
-// class _Carpool_upload_postState extends State<Carpool_upload_post> {
-//   final TextEditingController startController = TextEditingController();
-//   final TextEditingController destinationController = TextEditingController();
-//   final TextEditingController vehicleController = TextEditingController();
-//   final TextEditingController timeOfDepartureController =
-//       TextEditingController();
-//   final TextEditingController expectedPerHeadChargeController =
-//       TextEditingController();
-//
-//   @override
-//   void dispose() {
-//     super.dispose();
-//     startController.dispose();
-//     destinationController.dispose();
-//     vehicleController.dispose();
-//     timeOfDepartureController.dispose();
-//     expectedPerHeadChargeController.dispose();
-//   }
-//
-//   bool _isloading = false;
-//   void uploadPost() async {
-//     setState(() {
-//       _isloading = true;
-//     });
-//     try {
-//       model.User user = Provider.of<UserProvider>(context).getUser;
-//
-//       String res = await FirestoreMethods().uploadPost(
-//         start: startController.text,
-//         destination: destinationController.text,
-//         timeOfDeparture: timeOfDepartureController.text,
-//         vehicle: vehicleController.text,
-//         expectedPerHeadCharge: expectedPerHeadChargeController.text,
-//         username: user.username,
-//         uid: user.uid,
-//       );
-//       if (res == "success") {
-//         setState(() {
-//           _isloading = false;
-//         });
-//
-//         startController.clear();
-//         destinationController.clear();
-//         vehicleController.clear();
-//         timeOfDepartureController.clear();
-//         expectedPerHeadChargeController.clear();
-//         showSnackBar("Uploaded", context);
-//       } else {
-//         setState(() {
-//           _isloading = false;
-//         });
-//         showSnackBar(res, context);
-//       }
-//     } catch (e) {}
-//   }
-//
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: mobileBackgroundColor,
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back),
-//           onPressed: () {},
-//         ),
-//         title: const Text('Post to'),
-//         centerTitle: false,
-//         actions: [
-//           TextButton(
-//             onPressed: uploadPost,
-//             child: const Text(
-//               'Post',
-//               style: TextStyle(
-//                 color: Colors.blueAccent,
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 16,
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//       body: Column(
-//         children: [
-//           _isloading
-//               ? const LinearProgressIndicator()
-//               : const Padding(
-//                   padding: EdgeInsets.only(top: 0),
-//                 ),
-//                 const Divider(),
-//           TextFieldInput(
-//               textEditingController: startController,
-//               hintText: 'Enter the starting point of journey',
-//               textInputType: TextInputType.text),
-//           const SizedBox(
-//             height: 24,
-//           ),
-//           TextFieldInput(
-//               textEditingController: destinationController,
-//               hintText: 'Enter the destination',
-//               textInputType: TextInputType.text),
-//           const SizedBox(
-//             height: 24,
-//           ),
-//           TextFieldInput(
-//             textEditingController: timeOfDepartureController,
-//             hintText: 'Enter the time and Date of Departure',
-//             textInputType: TextInputType.datetime,
-//           ),
-//           const SizedBox(
-//             height: 24,
-//           ),
-//           TextFieldInput(
-//             textEditingController: vehicleController,
-//             hintText: 'Enter the vehicle ex- Cab or auto',
-//             textInputType: TextInputType.text,
-//           ),
-//           const SizedBox(
-//             height: 24,
-//           ),
-//           TextFieldInput(
-//             textEditingController: expectedPerHeadChargeController,
-//             hintText: 'Enter the Expected per Head Charge',
-//             textInputType: TextInputType.number,
-//           ),
-//           const SizedBox(
-//             height: 24,
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
-// import 'dart:html';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uniconnect/resources/buysell_methods.dart';
+import 'package:uuid/uuid.dart';
 
 
 import 'profile_view.dart';
@@ -171,6 +19,8 @@ import '../models/user.dart';
 import '../providers/providers.dart';
 import '../widgets/text_field_input.dart';
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class List_Item extends StatefulWidget {
   const List_Item({super.key});
@@ -181,34 +31,75 @@ class List_Item extends StatefulWidget {
 
 class _List_Item extends State<List_Item> {
   //final TextEditingController uid = TextEditingController();
-  final TextEditingController pic = TextEditingController();
+  late String uid;
+  List<String> pic=[];
+  //final TextEditingController pic = TextEditingController();
   final TextEditingController pdtName = TextEditingController();
   final TextEditingController pdtDesc =
   TextEditingController();
   final TextEditingController sellingPrice =
   TextEditingController();
-  final TextEditingController phno =
-  TextEditingController();
- // final TextEditingController postId =
-  //TextEditingController();
- // final TextEditingController datePublished =
+ // final TextEditingController phno =
  // TextEditingController();
 
-   XFile? image;
+  // final TextEditingController postId =
+  //TextEditingController();
+  // final TextEditingController datePublished =
+  // TextEditingController();
+
+  File? image;
+
+  // XFile image=XFile("assets/left-arrow.png");
   //
   final ImagePicker picker = ImagePicker();
 
   get imagge => null;
+
   //
   // //we can upload image from camera or from gallery based on parameter
-  Future getImage(ImageSource media) async {
-    var img = await picker.pickImage(source: media);
-    print("kkkkkkkkkkkkkkkkkkkkk  "+img!.path);
-    setState(() {
-      image = img;
-    });
-  }
+  // Future getImage(ImageSource media) async {
+  //   var img = await picker.pickImage(source: media);
+  //   print("kkkkkkkkkkkkkkkkkkkkk  "+img!.path);
+  //   setState(() {
+  //     image = img;
+  //   });
+  // }
+  final ImagePicker imagePicker = ImagePicker();
 
+  List<XFile>? imageFileList = [];
+  List<File>? images=[];
+  List<String> paths=[];
+
+  void selectImages() async {
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    if (selectedImages!.isNotEmpty) {
+      imageFileList!.addAll(selectedImages);
+    }
+    setState(() {
+      print("dfdfdfdffdfdffdfdfdfdfdffdfdfdfdfdf123456789");
+      for(XFile k in selectedImages){
+        print("dfdfdfdffdfdffdfdfdfdfdffdfdfdfdfdf");
+        images!.add(File(k.path));
+      }
+   });
+
+    //if(images!=null){
+
+      int c=1;
+      for(File image in images!){
+        //String uid= FirebaseAuth.instance.currentUser!.uid;
+        String temp=postId;
+        //if(!paths.contains('buysell/$temp+$c.jpg')) {
+          firebase_storage.Reference ref = firebase_storage.FirebaseStorage
+              .instance.ref().child('buysell/$temp+$c.jpg');
+          paths.add('buysell/$temp+$c.jpg');
+          await ref.putFile(image);
+        //}
+        c++;
+      }
+
+    //}
+  }
 
   void myAlert() {
     showDialog(
@@ -219,14 +110,17 @@ class _List_Item extends State<List_Item> {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             title: Text('Please choose media to select'),
             content: Container(
-              height: MediaQuery.of(context).size.height / 6,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 6,
               child: Column(
                 children: [
                   ElevatedButton(
                     //if user click this button, user can upload image from gallery
                     onPressed: () {
                       Navigator.pop(context);
-                      getImage(ImageSource.gallery);
+                      selectImages();
                     },
                     child: Row(
                       children: [
@@ -239,7 +133,7 @@ class _List_Item extends State<List_Item> {
                     //if user click this button. user can upload image from camera
                     onPressed: () {
                       Navigator.pop(context);
-                      getImage(ImageSource.camera);
+                      selectImages();
                     },
                     child: Row(
                       children: [
@@ -256,41 +150,36 @@ class _List_Item extends State<List_Item> {
   }
 
 
-
-
   get imageUrl => null;
 
   @override
   void dispose() {
     super.dispose();
-   // uid.dispose();
-    pic.dispose();
+    // uid.dispose();
+    //pic.dispose();
     pdtName.dispose();
     pdtDesc.dispose();
     sellingPrice.dispose();
-    phno.dispose();
-   // postId.dispose();
-   // datePublished.dispose();
+    //phno.dispose();
+    // postId.dispose();
+    // datePublished.dispose();
   }
 
   bool _isloading = false;
-  void uploadPost(
-      String uid,
-      String pic,
-      String pdtName,
-      String pdtDesc,
-      String sellingPrice,
-      String phno,
-      String postId,
-      datePublished
-      ) async {
+  late String postId=const Uuid().v1();
+  void uploadPost(String uid,
+      //List<String> pic,
+      String productName,
+      String productDesc,
+      String sellingprice,
+      /*String phoneno,*/) async {
     setState(() {
       _isloading = true;
     });
     try {
-
+      //postId;
       String res = await BuySellMethods().uploadPost(
-        // startController.text,
+
         // destinationController.text,
         // vehicleController.text,
         // timeOfDepartureController.text,
@@ -299,10 +188,12 @@ class _List_Item extends State<List_Item> {
         // uid,
         //
         // username,
-        // profilepic,
+
         uid,
-        pic,
-        pdtName,pdtDesc,sellingPrice,phno,postId
+        paths,
+
+
+        productName, productDesc, sellingprice,postId/* phoneno,*/
 
 
       );
@@ -310,7 +201,7 @@ class _List_Item extends State<List_Item> {
         setState(() {
           _isloading = false;
         });
-        //
+
         // startController.clear();
         // destinationController.clear();
         // vehicleController.clear();
@@ -328,201 +219,194 @@ class _List_Item extends State<List_Item> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    getUserDetails();
+    // Future.delayed(Duration.zero,(){
+    //   showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertDialog(
+    //         title: const Text('REMINDER!!'),
+    //         content: const Text('Any posts with a departure time that has already passed will be automatically deleted.'),
+    //         actions: [
+    //           TextButton(
+    //             onPressed: () {
+    //               Navigator.pop(context);
+    //             },
+    //             child: const Text('OK'),
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // });
+  }
+
+  Future<void> getUserDetails() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection(
+        'users').doc(uid).get();
+    if (userSnapshot.exists) {
+      setState(() {
+        this.uid = userSnapshot['uid'];
+      });
+    }
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    final model.User? user =  Provider.of<UserProvider>(context).getUser;
-
+    final model.User? user = Provider
+        .of<UserProvider>(context)
+        .getUser;
     return Scaffold(
 
-      body: Container(
-        padding: const EdgeInsets.only(left: 15, top: 20, right: 15),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: ListView(
+        body: Center(
+          child: Column(
             children: [
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 350,
-                      height: 300,
-
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 4, color: Colors.white),
-
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity((0.1)),
-                          )
-
-                        ],
-                        //shape: BoxShape.circle,
-                      ),
-                        child: Image.file(File(image!.path)),
-                        //child: image?.path!= null ?
-
-                          // FadeInImage.assetNetwork(
-                          //   placeholder: 'assets/loading.gif',
-                          //   image: image!.path ,
-                          //   fit: BoxFit.cover,
-                          //   imageErrorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                          //     return Image.asset('assets/loading.gif',
-                          //         fit: BoxFit.cover
-                          //     );
-                          //   },
-                          // )
-
-                      //  : Container()
-                    ),
-
-
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          myAlert();
-                        },
-
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(width: 4, color: Colors.white),
-                            color: Colors.black,
-                          ),
-                          child: const Icon(Icons.edit, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    imagge != null?
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-
-                        child: Image.file(
-                          //to show image, you type like this.
-                          File(image!.path),
-                          fit: BoxFit.cover,
-                          width: 350,
-                          height: 250,
-
-                        ),
-                      ),
-                    )
-                        : Text(
-                      "",
-                      style: TextStyle(fontSize: 20),
-                    )
-                  ],
-                ),
+              MaterialButton(
+                  color: Colors.blue,
+                  child: const Text(
+                      "Pick Images from Gallery",
+                      style: TextStyle(
+                          color: Colors.white70, fontWeight: FontWeight.bold
+                      )
+                  ),
+                  onPressed: () {
+                    selectImages();
+                  }
               ),
-              const SizedBox(height: 30),
-              buildTextField("Product Name", "Product Name", false),
-              buildTextField("Product Description", "Describe your product here.", false),
-              buildNumberField("Selling Price", "Estimate Price", false,6),
-             // buildTextField("Hostel Number", "Enter your hostel number", false),
-              buildNumberField("Phone Number", "Enter your phone number", false,10),
+              SizedBox(height: 20,),
+              Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GridView.builder(
+                        itemCount: imageFileList!.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Image.file(File(imageFileList![index].path),
+                              fit: BoxFit.cover);
+                        }
+                    ),
+
+                  ),
+
+              ),
+
+             buildTextField("Product Name", "Product Name",pdtName, false),
+              buildTextField("Product Description", "Describe your product here.",pdtDesc, false),
+              buildNumberField("Selling Price", "Estimate Price",sellingPrice, false,6),
+              // buildTextField("Hostel Number", "Enter your hostel number", false),
+              //buildNumberField("Phone Number", "Enter your phone number",phno, false,10),
               TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.all(16.0),
                   textStyle: const TextStyle(fontSize: 20),
+
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  if(checkdetails()){
+                    uploadPost(uid, pdtName.text, pdtDesc.text, sellingPrice.text, /*phno.text,*/);
+                  }
+                },
                 child: const Text('List Item'),
               ),
+
             ],
-
           ),
-
-        ),
-
-      ),
-
+        )
     );
   }
+    Widget buildTextField(String labelText, String placeholder,
+        TextEditingController editor, bool isPasswordTextField) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 30),
 
-  Widget buildTextField(String labelText, String placeholder, bool isPasswordTextField) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+        child: TextField(
+          //obscureText: isPasswordTextField ? isObscurePassword : false,
+          controller: editor,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+              suffixIcon: isPasswordTextField
+                  ? IconButton(
+                icon: Icon(Icons.remove_red_eye, color: Colors.grey),
+                onPressed: () {
 
-      child: TextField(
-        //obscureText: isPasswordTextField ? isObscurePassword : false,
-
-
-        decoration: InputDecoration(
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-              icon: Icon(Icons.remove_red_eye, color: Colors.grey),
-              onPressed: () {
-                setState(() {
-                  //isObscurePassword = !isObscurePassword;
-                });
-              },
-            )
-                : null,
-            contentPadding: const EdgeInsets.only(bottom: 5),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey
-            )
+                },
+              )
+                  : null,
+              contentPadding: const EdgeInsets.only(bottom: 5),
+              labelText: labelText,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintText: placeholder,
+              hintStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey
+              )
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
 
-  Widget buildNumberField(String labelText, String placeholder, bool isPasswordTextField,int len) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+    Widget buildNumberField(String labelText, String placeholder,
+        TextEditingController editor, bool isPasswordTextField, int len) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 30),
 
-      child: TextField(
-        //obscureText: isPasswordTextField ? isObscurePassword : false,
-        keyboardType: TextInputType.number,
+        child: TextField(
+          controller: editor,
+          //obscureText: isPasswordTextField ? isObscurePassword : false,
+          keyboardType: TextInputType.number,
 
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-          LengthLimitingTextInputFormatter(len),
-        ],
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            LengthLimitingTextInputFormatter(len),
+          ],
 
-        decoration: InputDecoration(
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-              icon: Icon(Icons.remove_red_eye, color: Colors.grey),
-              onPressed: () {
-                setState(() {
-                  //isObscurePassword = !isObscurePassword;
-                });
-              },
-            )
-                : null,
-            contentPadding: const EdgeInsets.only(bottom: 5),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey
-            )
+          decoration: InputDecoration(
+              suffixIcon: isPasswordTextField
+                  ? IconButton(
+                icon: Icon(Icons.remove_red_eye, color: Colors.grey),
+                onPressed: () {
+
+                },
+              )
+                  : null,
+              contentPadding: const EdgeInsets.only(bottom: 5),
+              labelText: labelText,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintText: placeholder,
+              hintStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey
+              )
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
+    bool checkdetails() {
+      //pic.text = pic.text.trim();
+      pdtName.text = pdtName.text.trim();
+      pdtDesc.text = pdtDesc.text.trim();
+      sellingPrice.text = sellingPrice.text.trim();
+     // phno.text = phno.text.trim();
+      if (pdtName.text.isEmpty || pdtDesc.text.isEmpty ||
+          sellingPrice.text.isEmpty /*|| phno.text.isEmpty*/) {
+        showSnackBar("Fields cannot be empty", context);
+        return false;
+      }
+
+      return true;
+    }
 
 }
