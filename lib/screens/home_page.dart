@@ -38,9 +38,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<String> images = [
-    'assets/slideshow_pics/ss_1.jpg',
-    'assets/slideshow_pics/ss_2.jpg',
-    'assets/slideshow_pics/ss_3.jpg',
+    'assets/slideshow_pics/ss_4.jpeg',
+    'assets/slideshow_pics/ss_5.png',
+    // 'assets/slideshow_pics/ss_3.jpg',
   ];
   String imageUrl="https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/default_prof.jpg?alt=media&token=2488a918-e680-4445-a04b-5627c62dcf46";
   String name='';

@@ -66,21 +66,15 @@
 //     );
 //   }
 // }
-
-
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:uniconnect/screens/edit_profile.dart';
-
 import '../util/colors.dart';
-
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
 
@@ -97,8 +91,7 @@ class _ProfilePageState extends State<ProfileView> {
   String bio="",hostel=" ",degree="",gradyear="",phone="";
 
   Future getImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
-
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -178,7 +171,7 @@ class _ProfilePageState extends State<ProfileView> {
 
       body:
       Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/home_bg.png'),
               fit: BoxFit.cover,
@@ -212,7 +205,7 @@ class _ProfilePageState extends State<ProfileView> {
                       child: imageUrl != null ? ClipOval(
                         child: FadeInImage.assetNetwork(
                           placeholder: 'assets/loading.gif',
-                          image: imageUrl ?? "https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/default_prof.jpg?alt=media&token=2488a918-e680-4445-a04b-5627c62dcf46",
+                          image: imageUrl,
                           fit: BoxFit.cover,
                           imageErrorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
                             return Image.asset('assets/loading.gif',
@@ -352,8 +345,7 @@ class _ProfilePageState extends State<ProfileView> {
                   // Action to perform when the button is pressed
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: iconcolor, // Background color
-                  onPrimary: Colors.white, // Text color
+                  foregroundColor: Colors.white, backgroundColor: iconcolor, // Text color
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10), // Rounded corners
                   ),

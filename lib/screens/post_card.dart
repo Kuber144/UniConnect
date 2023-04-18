@@ -16,6 +16,7 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
 
+
   String getHello()
   {
     return widget.hello;
@@ -295,10 +296,10 @@ class _AddPopupCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 10,),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
                     addnote == "" ? 'No additional notes' : 'Additional notes:\n $addnote',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),

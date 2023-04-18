@@ -69,37 +69,31 @@ class _List_Item extends State<List_Item> {
   List<XFile>? imageFileList = [];
   List<File>? images=[];
   List<String> paths=[];
+  List<String> downloadUrls = []; // List to store download URLs
 
   void selectImages() async {
+
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
     if (selectedImages!.isNotEmpty) {
       imageFileList!.addAll(selectedImages);
     }
     setState(() {
       print("dfdfdfdffdfdffdfdfdfdfdffdfdfdfdfdf123456789");
-      for(XFile k in selectedImages){
+      for (XFile k in selectedImages) {
         print("dfdfdfdffdfdffdfdfdfdfdffdfdfdfdfdf");
         images!.add(File(k.path));
       }
-   });
+    });
 
-    //if(images!=null){
 
-      int c=1;
-      for(File image in images!){
-        //String uid= FirebaseAuth.instance.currentUser!.uid;
-        String temp=postId;
-        //if(!paths.contains('buysell/$temp+$c.jpg')) {
-          firebase_storage.Reference ref = firebase_storage.FirebaseStorage
-              .instance.ref().child('buysell/$temp+$c.jpg');
-          paths.add('buysell/$temp+$c.jpg');
-          await ref.putFile(image);
-        //}
-        c++;
-      }
 
-    //}
+
+
+
+
+
   }
+
 
   void myAlert() {
     showDialog(
@@ -178,6 +172,25 @@ class _List_Item extends State<List_Item> {
     });
     try {
       //postId;
+
+      int c = 1;
+      for (File image in images!) {
+        String temp = postId;
+
+        firebase_storage.Reference ref = firebase_storage.FirebaseStorage
+            .instance.ref()
+            .child('buysell/$temp+$c.jpg');
+
+        paths.add('buysell/$temp+$c.jpg');
+        await ref.putFile(image);
+
+        String downloadUrl = await ref.getDownloadURL(); // Get download URL for uploaded image
+        downloadUrls.add(downloadUrl); // Add download URL to the list
+
+        c++;
+      }
+      print("in upload func  $downloadUrls");
+
       String res = await BuySellMethods().uploadPost(
 
         // destinationController.text,
@@ -188,9 +201,9 @@ class _List_Item extends State<List_Item> {
         // uid,
         //
         // username,
-
         uid,
-        paths,
+
+        downloadUrls,
 
 
         productName, productDesc, sellingprice,postId/* phoneno,*/
