@@ -202,7 +202,7 @@ class _ProfilePageState extends State<ProfileView> {
                         ],
                         shape: BoxShape.circle,
                       ),
-                      child: imageUrl != null ? ClipOval(
+                      child: ClipOval(
                         child: FadeInImage.assetNetwork(
                           placeholder: 'assets/loading.gif',
                           image: imageUrl,
@@ -214,7 +214,6 @@ class _ProfilePageState extends State<ProfileView> {
                           },
                         ),
                       )
-                      : Container()
                     ),
 
                     Positioned(
@@ -244,9 +243,9 @@ class _ProfilePageState extends State<ProfileView> {
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: ListTile(
-                  leading: Icon(Icons.person, color: iconcolor),
-                  title: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("Username"),
+                  leading: const Icon(Icons.person, color: iconcolor),
+                  title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: const Text("Username"),
                 ),
               ),
               const SizedBox(height: 10),
@@ -254,9 +253,9 @@ class _ProfilePageState extends State<ProfileView> {
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: ListTile(
-                  leading: Icon(Icons.email_outlined, color: iconcolor),
-                  title: Text(email, style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("E-Mail"),
+                  leading: const Icon(Icons.email_outlined, color: iconcolor),
+                  title: Text(email, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: const Text("E-Mail"),
                 ),
               ),
               const SizedBox(height: 10),
@@ -264,9 +263,9 @@ class _ProfilePageState extends State<ProfileView> {
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: ListTile(
-                  leading: Icon(Icons.info_outline_rounded, color: iconcolor),
-                  title: Text(bio, style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("About Me"),
+                  leading: const Icon(Icons.info_outline_rounded, color: iconcolor),
+                  title: Text(bio, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: const Text("About Me"),
 
                 ),
               ),
@@ -275,9 +274,9 @@ class _ProfilePageState extends State<ProfileView> {
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: ListTile(
-                  leading: Icon(Icons.contact_page, color:iconcolor),
-                  title: Text(phone, style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("Contact Number"),
+                  leading: const Icon(Icons.contact_page, color:iconcolor),
+                  title: Text(phone, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: const Text("Contact Number"),
 
                 ),
               ),
@@ -286,9 +285,9 @@ class _ProfilePageState extends State<ProfileView> {
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: ListTile(
-                  leading: Icon(Icons.house_siding_rounded, color: iconcolor),
-                  title: Text(hostel, style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("Hostel"),
+                  leading: const Icon(Icons.house_siding_rounded, color: iconcolor),
+                  title: Text(hostel, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: const Text("Hostel"),
 
                 ),
               ),
@@ -297,9 +296,9 @@ class _ProfilePageState extends State<ProfileView> {
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: ListTile(
-                  leading: Icon(Icons.school_sharp, color: iconcolor),
-                  title: Text(degree, style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("Pursuing"),
+                  leading: const Icon(Icons.school_sharp, color: iconcolor),
+                  title: Text(degree, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: const Text("Pursuing"),
 
                 ),
               ),
@@ -308,13 +307,13 @@ class _ProfilePageState extends State<ProfileView> {
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 child: ListTile(
-                  leading: Icon(Icons.calendar_today_sharp, color: iconcolor),
-                  title: Text(gradyear, style: TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text("Graduation Year"),
+                  leading: const Icon(Icons.calendar_today_sharp, color: iconcolor),
+                  title: Text(gradyear, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: const Text("Graduation Year"),
                 ),
               ),
               const SizedBox(height: 30,),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 40),
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 40),
               child: ElevatedButton(
                 onPressed: () {
 
@@ -349,12 +348,12 @@ class _ProfilePageState extends State<ProfileView> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10), // Rounded corners
                   ),
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 20, // Horizontal padding
                     vertical: 10, // Vertical padding
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Edit Details',
                   style: TextStyle(
                     fontSize: 16, // Text size

@@ -39,8 +39,8 @@ class _List_Item extends State<List_Item> {
   TextEditingController();
   final TextEditingController sellingPrice =
   TextEditingController();
- // final TextEditingController phno =
- // TextEditingController();
+  // final TextEditingController phno =
+  // TextEditingController();
 
   // final TextEditingController postId =
   //TextEditingController();
@@ -201,12 +201,12 @@ class _List_Item extends State<List_Item> {
         // uid,
         //
         // username,
-        uid,
+          uid,
 
-        downloadUrls,
+          downloadUrls,
 
 
-        productName, productDesc, sellingprice,postId/* phoneno,*/
+          productName, productDesc, sellingprice,postId/* phoneno,*/
 
 
       );
@@ -293,24 +293,24 @@ class _List_Item extends State<List_Item> {
               ),
               SizedBox(height: 20,),
               Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GridView.builder(
-                        itemCount: imageFileList!.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Image.file(File(imageFileList![index].path),
-                              fit: BoxFit.cover);
-                        }
-                    ),
-
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GridView.builder(
+                      itemCount: imageFileList!.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Image.file(File(imageFileList![index].path),
+                            fit: BoxFit.cover);
+                      }
                   ),
+
+                ),
 
               ),
 
-             buildTextField("Product Name", "Product Name",pdtName, false),
+              buildTextField("Product Name", "Product Name",pdtName, false),
               buildTextField("Product Description", "Describe your product here.",pdtDesc, false),
               buildNumberField("Selling Price", "Estimate Price",sellingPrice, false,6),
               // buildTextField("Hostel Number", "Enter your hostel number", false),
@@ -336,90 +336,90 @@ class _List_Item extends State<List_Item> {
         )
     );
   }
-    Widget buildTextField(String labelText, String placeholder,
-        TextEditingController editor, bool isPasswordTextField) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 30),
+  Widget buildTextField(String labelText, String placeholder,
+      TextEditingController editor, bool isPasswordTextField) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30),
 
-        child: TextField(
-          //obscureText: isPasswordTextField ? isObscurePassword : false,
-          controller: editor,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-              suffixIcon: isPasswordTextField
-                  ? IconButton(
-                icon: Icon(Icons.remove_red_eye, color: Colors.grey),
-                onPressed: () {
+      child: TextField(
+        //obscureText: isPasswordTextField ? isObscurePassword : false,
+        controller: editor,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+            suffixIcon: isPasswordTextField
+                ? IconButton(
+              icon: Icon(Icons.remove_red_eye, color: Colors.grey),
+              onPressed: () {
 
-                },
-              )
-                  : null,
-              contentPadding: const EdgeInsets.only(bottom: 5),
-              labelText: labelText,
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              hintText: placeholder,
-              hintStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey
-              )
-          ),
+              },
+            )
+                : null,
+            contentPadding: const EdgeInsets.only(bottom: 5),
+            labelText: labelText,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: placeholder,
+            hintStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey
+            )
         ),
-      );
-    }
+      ),
+    );
+  }
 
 
-    Widget buildNumberField(String labelText, String placeholder,
-        TextEditingController editor, bool isPasswordTextField, int len) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 30),
+  Widget buildNumberField(String labelText, String placeholder,
+      TextEditingController editor, bool isPasswordTextField, int len) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 30),
 
-        child: TextField(
-          controller: editor,
-          //obscureText: isPasswordTextField ? isObscurePassword : false,
-          keyboardType: TextInputType.number,
+      child: TextField(
+        controller: editor,
+        //obscureText: isPasswordTextField ? isObscurePassword : false,
+        keyboardType: TextInputType.number,
 
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-            LengthLimitingTextInputFormatter(len),
-          ],
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+          LengthLimitingTextInputFormatter(len),
+        ],
 
-          decoration: InputDecoration(
-              suffixIcon: isPasswordTextField
-                  ? IconButton(
-                icon: Icon(Icons.remove_red_eye, color: Colors.grey),
-                onPressed: () {
+        decoration: InputDecoration(
+            suffixIcon: isPasswordTextField
+                ? IconButton(
+              icon: Icon(Icons.remove_red_eye, color: Colors.grey),
+              onPressed: () {
 
-                },
-              )
-                  : null,
-              contentPadding: const EdgeInsets.only(bottom: 5),
-              labelText: labelText,
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              hintText: placeholder,
-              hintStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey
-              )
-          ),
+              },
+            )
+                : null,
+            contentPadding: const EdgeInsets.only(bottom: 5),
+            labelText: labelText,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            hintText: placeholder,
+            hintStyle: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey
+            )
         ),
-      );
+      ),
+    );
+  }
+
+  bool checkdetails() {
+    //pic.text = pic.text.trim();
+    pdtName.text = pdtName.text.trim();
+    pdtDesc.text = pdtDesc.text.trim();
+    sellingPrice.text = sellingPrice.text.trim();
+    // phno.text = phno.text.trim();
+    if (pdtName.text.isEmpty || pdtDesc.text.isEmpty ||
+        sellingPrice.text.isEmpty /*|| phno.text.isEmpty*/) {
+      showSnackBar("Fields cannot be empty", context);
+      return false;
     }
 
-    bool checkdetails() {
-      //pic.text = pic.text.trim();
-      pdtName.text = pdtName.text.trim();
-      pdtDesc.text = pdtDesc.text.trim();
-      sellingPrice.text = sellingPrice.text.trim();
-     // phno.text = phno.text.trim();
-      if (pdtName.text.isEmpty || pdtDesc.text.isEmpty ||
-          sellingPrice.text.isEmpty /*|| phno.text.isEmpty*/) {
-        showSnackBar("Fields cannot be empty", context);
-        return false;
-      }
-
-      return true;
-    }
+    return true;
+  }
 
 }

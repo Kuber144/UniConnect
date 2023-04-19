@@ -12,7 +12,7 @@ import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/widgets/hero_dialog_route.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:uniconnect/screens/carpool_feed.dart';
+// import 'package:uniconnect/screens/carpool_feed.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
@@ -26,7 +26,7 @@ import 'package:uniconnect/providers/providers.dart';
 // import 'package:uniconnect/responsive/mobile_screen_layout.dart';
 import 'package:uniconnect/screens/NavBar.dart';
 // import 'package:uniconnect/models/user.dart' as model;
-import 'package:uniconnect/screens/carpool_upload_post.dart';
+// import 'package:uniconnect/screens/carpool_upload_post.dart';
 
 //import '../models/user.dart';
 import 'buy_sell_p1.dart';

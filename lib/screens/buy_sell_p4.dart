@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uniconnect/screens/buy_sell_p1.dart';
-import 'package:uniconnect/screens/carpool_My_Requests.dart';
-import 'package:uniconnect/screens/carpool_upload_post.dart';
-import 'package:uniconnect/screens/post_card.dart';
+import 'package:uniconnect/screens/carpool_screens/carpool_My_Requests.dart';
+import 'package:uniconnect/screens/carpool_screens/carpool_upload_post.dart';
+import 'package:uniconnect/screens/carpool_screens/post_card.dart';
 import 'package:uniconnect/util/colors.dart';
 
 import '../main.dart';

@@ -4,8 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uniconnect/screens/login_screen.dart';
+import 'package:uniconnect/screens/misc_screens/ReportBug.dart';
+import 'package:uniconnect/screens/misc_screens/request_feature.dart';
 import 'package:uniconnect/screens/profile_view.dart';
 import "package:share_plus/share_plus.dart";
+import 'package:uniconnect/screens/chat_home_page.dart';
+import '../models/FirebaseHelper.dart';
+import '../models/UserModel.dart';
+import 'misc_screens/give_feedback.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -224,6 +230,24 @@ class NavBar extends StatelessWidget {
           //   onTap: () {},
           // ),
           ListTile(
+            leading: const Icon(Icons.chat),
+            title: const Text('Chat'),
+            onTap: () async {
+              User? currentUser = FirebaseAuth.instance.currentUser;
+              if(currentUser != null) {
+                UserModel? thisUserModel =  await FirebaseHelper.getUserModelById(currentUser.uid);
+                if(thisUserModel != null){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Chat_HomePage(userModel: thisUserModel, firebaseuser: currentUser),
+                      ),
+                    );
+                }
+              }
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.share),
             title: const Text('Share'),
             onTap: () {
@@ -231,13 +255,41 @@ class NavBar extends StatelessWidget {
                   "Check out this app!\nYou can download it from here: https://drive.google.com/drive/folders/1i3bdZ1h2DDMpYw6tI4jGEOlUsdY1Gu9m?usp=sharing !!\nShared from UniConnect");
             },
           ),
-          const ListTile(
+          ListTile(
+            leading: const Icon(Icons.feedback),
+            title: const Text('Feedback'),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => MyWebScreen(
+                    url: "https://docs.google.com/forms/d/e/1FAIpQLSe7IAFAfPyFgW8K7nvocYAk_v7Kr8KHs3yvOQzQ5wsAAtc3Fg/viewform?usp=sf_link",
+                    // url: 'https://lnf.iiita.ac.in',
+                  )
+              ));
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.lightbulb_outline),
             title: Text('Request a feature'),
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RequestFeature(),
+                ),
+              );
+            },
           ),
-          const ListTile(
+          ListTile(
             leading: Icon(Icons.bug_report),
             title: Text('Report a bug'),
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReportBug(),
+                ),
+              );
+            },
           ),
           ListTile(
             title: const Text('Logout'),

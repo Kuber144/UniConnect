@@ -100,7 +100,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
   }
 
 
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
   Future<void> getUserDetails() async {
     String uid= FirebaseAuth.instance.currentUser!.uid;
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
@@ -193,7 +193,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
     );
   }
   void _showDateTimePicker(BuildContext context) async {
-    final initialDate = selectedDateTime ?? DateTime.now();
+    final initialDate = selectedDateTime;
     final currentTime = TimeOfDay.now();
     final newDate = await showDatePicker(
       context: context,
@@ -235,16 +235,16 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
 
 
   Widget buildTextField(String labelText, String placeholder, TextEditingController controller,bool isOnlyDigit) {
-    final _intFormatter = FilteringTextInputFormatter.digitsOnly;
-    final _textFormatter= FilteringTextInputFormatter.allow(RegExp(r'.*'));
-    TextInputFormatter? _formatter;
+    final intFormatter = FilteringTextInputFormatter.digitsOnly;
+    final textFormatter= FilteringTextInputFormatter.allow(RegExp(r'.*'));
+    TextInputFormatter? formatter;
 
     if(isOnlyDigit)
     {
-      _formatter=_intFormatter;
+      formatter=intFormatter;
     }
     else {
-      _formatter=_textFormatter;
+      formatter=textFormatter;
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 30),
@@ -252,7 +252,7 @@ class _Carpool_upload_postState extends State<Carpool_upload_post> {
         maxLines: null,
         keyboardType: isOnlyDigit ? TextInputType.number : TextInputType.text,
         controller: controller,
-        inputFormatters: [_formatter!],
+        inputFormatters: [formatter],
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(bottom: 5),
             labelText: labelText,

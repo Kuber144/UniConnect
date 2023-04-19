@@ -9,7 +9,7 @@ import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/widgets/hero_dialog_route.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:uniconnect/screens/carpool_feed.dart';
+import 'package:uniconnect/screens/carpool_screens/carpool_feed.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
@@ -23,7 +23,7 @@ import 'package:uniconnect/providers/providers.dart';
 // import 'package:uniconnect/responsive/mobile_screen_layout.dart';
 import 'package:uniconnect/screens/NavBar.dart';
 // import 'package:uniconnect/models/user.dart' as model;
-import 'package:uniconnect/screens/carpool_upload_post.dart';
+import 'package:uniconnect/screens/carpool_screens/carpool_upload_post.dart';
 
 //import '../models/user.dart';
 import 'buy_sell_p1.dart';
@@ -75,18 +75,24 @@ class _BuySellPostCardState2 extends State<BuySellPostCard2> {
   @override
   void initState(){
     super.initState();
-    imageUrl="https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/default_prof.jpg?alt=media&token=2488a918-e680-4445-a04b-5627c62dcf46";
-    getImageUrl();
+    // imageUrl="https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/default_prof.jpg?alt=media&token=2488a918-e680-4445-a04b-5627c62dcf46";
+    // getImageUrl();
+    List<String>?PostImages=[];
+    setState(() {
+      PostImages=getPic();
+      imageUrl = PostImages![0];
+      print(imageUrl);
+    });
     getUserDetails(widget.snap['uid']);
   }
-  Future<void> getImageUrl() async{
-    String postId=widget.snap['postId'];
-    final ref=storage.ref().child('buysell/$postId+1.jpg');
-    final url = await ref.getDownloadURL();
-    setState(() {
-      imageUrl=url;
-    });
-  }
+  // Future<void> getImageUrl() async{
+  //   String postId=widget.snap['postId'];
+  //   final ref=storage.ref().child('buysell/$postId+1.jpg');
+  //   final url = await ref.getDownloadURL();
+  //   setState(() {
+  //     imageUrl=url;
+  //   });
+  // }
   Future<void> getUserDetails(String uid)  async {
     //String uid= FirebaseAuth.instance.currentUser!.uid;
     print("Call  111111111111");
@@ -120,50 +126,24 @@ class _BuySellPostCardState2 extends State<BuySellPostCard2> {
     });
   }
 
+  List<String>? getPic() {
+    List<dynamic> dynamicList = widget.snap['pic'];
+    List<String>? stringList = dynamicList?.map((item) => item.toString())?.toList();
+    return stringList;
+  }
+
+
 
   String getHello()
   {
     return widget.hello;
   }
-  bool _isProcessing = true;
-  bool _isProcessing2 = true;
-  void _handleAsyncFunction() async {
-    if (_isProcessing) {
-      return; // the function is already being processed, so exit early
-    }
-    _isProcessing = true; // set the flag to prevent multiple calls
-    try {
-      // perform your asynchronous operation here
-      await getUserDetails(widget.snap['uid']);
-    } finally {
-      //_isProcessing = false; // reset the flag so the function can be called again
-    }
-  }
-  void _handleAsyncFunction2() async {
-    if (_isProcessing2) {
-      return; // the function is already being processed, so exit early
-    }
-    _isProcessing = true; // set the flag to prevent multiple calls
-    try {
-      // perform your asynchronous operation here
-      await getProfilePicture(widget.snap['postId']);
-    }catch(e){print("Nhi ho rha hai bc !!!");} finally {
-      // _isProcessing2 = false; // reset the flag so the function can be called again
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
 
-    // _isProcessing=false;
-    // _isProcessing2=false;
-    // @override
-    // void initState(){
-    // super.initState();
-    _handleAsyncFunction();
-    _handleAsyncFunction2();
-    getUserDetails(widget.snap['uid']);
-    // }
+
 
 
 
@@ -217,6 +197,7 @@ class _BuySellPostCardState2 extends State<BuySellPostCard2> {
                           //     },
                           //   ),
                           // ),
+
                           child: Image(image: NetworkImage(imageUrl),fit:BoxFit.cover,),
                         ),SizedBox(width: 19),
                         Column(
@@ -232,7 +213,7 @@ class _BuySellPostCardState2 extends State<BuySellPostCard2> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              widget.snap['pdtDesc'].substring(0,5)+"...",
+                              widget.snap['pdtDesc'].substring(0,1)+"...",
                               style: const TextStyle(fontSize: 12, color: mobileSearchColor),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

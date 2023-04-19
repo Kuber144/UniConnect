@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:uniconnect/screens/carpool_My_Requests.dart';
+import 'package:uniconnect/screens/carpool_screens/carpool_My_Requests.dart';
 import 'package:uniconnect/models/post_card_mess.dart';
 import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/util/utils.dart';
 
-import '../main.dart';
-import '../resources/firestore_methods_mess.dart';
+import '../../main.dart';
+import '../../resources/firestore_methods_mess.dart';
 import 'mess_feedback_my_comments.dart';
 
 
@@ -104,7 +104,7 @@ class _MessFeedState extends State<Mess_Feed> {
   {
     if((hostel=="BH-1" || hostel=="BH-4") && (hostelus=="BH-1" || hostelus=="BH-4"))
       return true;
-    if((hostel=="BH-2" || hostel=="BH-3") && (hostelus=="BH-2" || hostelus=="BH-43"))
+    if((hostel=="BH-2" || hostel=="BH-3") && (hostelus=="BH-2" || hostelus=="BH-3"))
       return true;
     if((hostel=="GH-1" || hostel=="GH-2" || hostel=="GH-3") && (hostelus=="GH-1" || hostelus=="GH-2" ||hostelus=="GH-3"))
       return true;
@@ -228,7 +228,7 @@ class _MessFeedState extends State<Mess_Feed> {
                     }
                     final filteredDocs = snapshot.data!.docs.where((doc) {
                       // Check if the uid is not equal to currentUserId and the document is active
-                      return  doc['phase'] ==phase && checkHostel(doc['hostel']);
+                      return  doc['phase']==phase && checkHostel(doc['hostel']);
                     }).toList();
 
                     if (filteredDocs.isEmpty) {

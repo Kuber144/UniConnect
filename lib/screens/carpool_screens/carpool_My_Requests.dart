@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uniconnect/screens/carpool_upload_post.dart';
-import 'package:uniconnect/screens/post_card_user.dart';
+import 'package:uniconnect/screens/carpool_screens/post_card_user.dart';
 import 'package:uniconnect/util/colors.dart';
 
-import '../main.dart';
+import '../../main.dart';
 
 class My_Requests extends StatelessWidget {
   const My_Requests({Key? key}) : super(key: key);
@@ -52,7 +51,7 @@ class My_Requests extends StatelessWidget {
                   itemBuilder: (context,index)=> Column(
                     children: [
                       PostCard(
-                        snap: filteredDocs[index].data() ?? {}, hello: uuid.v4(),
+                        snap: filteredDocs[index].data(), hello: uuid.v4(),
                       ),
                       const SizedBox(height: 13,),
                     ],
