@@ -133,7 +133,8 @@ class _Chat_searchPageState extends State<Chat_searchPage> {
                                 firabaseUser: widget.firebaseuser,
                                 chatroom: chatroomModel,
                               );
-                            }));
+                            })
+                            );
 
                           }
 

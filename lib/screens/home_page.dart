@@ -11,6 +11,7 @@ import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
 import 'package:uniconnect/screens/chat_home_page.dart';
 import 'package:uniconnect/screens/food_order_screens/food_home_page.dart';
+import 'package:uniconnect/screens/lnf_screens/lnf_home_page.dart';
 import 'package:uniconnect/screens/mess_feedback_screens/mess_feedback_feed.dart';
 import 'package:uniconnect/util/slideshow.dart';
 import 'package:flutter/material.dart';
@@ -266,6 +267,15 @@ class _HomePageState extends State<HomePage> {
                                 title: 'GAMES',
                                 icon:   'assets/inner_icons/games.png',
                                 onTap:() {
+
+                                  if(mounted){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const lnfHomePage(),
+                                      ),
+                                    );}
+
                                 },
                               ),
                             ],

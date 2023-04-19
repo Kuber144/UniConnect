@@ -3,12 +3,99 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/models/Offer_Announcement_Post.dart';
+import 'package:uniconnect/models/lnfModel.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/post.dart';
 
 class FirestoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+//Upload FoundPost
+  Future<String> uploadLnFPost(
+      String uid,
+      String postType,
+      List<String> pic,
+      String pdtName,
+      String pdtDesc,
+
+      String postId,
+      ) async {
+    String res = "some error occurred";
+    try {
+      lnfModel post = lnfModel(
+        uid: uid,
+        pic: pic,
+        pdtName: pdtName,
+        pdtDesc: pdtDesc,
+        datePublished: DateTime.now(),
+        postId: postId,
+        postType: postType,
+      );
+
+      // Add the 'pic' array to Firestore using FieldValue.arrayUnion()
+      FirebaseFirestore.instance.collection('LnFPosts').doc(postId).set(
+        {
+          'uid': post.uid,
+          'pic': FieldValue.arrayUnion(post.pic),
+          'pdtName': post.pdtName,
+          'pdtDesc': post.pdtDesc,
+          'datePublished': post.datePublished,
+          'postId': post.postId,
+          'postType':post.postType,
+        },
+      );
+
+      res = "success";
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
+
+
+  //upload lostPost
+
+  // Future<String> uploadLostPost(
+  //     String uid,
+  //     String postType,
+  //     List<String> pic,
+  //     String pdtName,
+  //     String pdtDesc,
+  //
+  //     String postId,
+  //     ) async {
+  //   String res = "some error occurred";
+  //   try {
+  //     lnfModel post = lnfModel(
+  //       uid: uid,
+  //       pic: pic,
+  //       pdtName: pdtName,
+  //       pdtDesc: pdtDesc,
+  //       datePublished: DateTime.now(),
+  //       postId: postId,
+  //       postType: postType,
+  //     );
+  //
+  //     // Add the 'pic' array to Firestore using FieldValue.arrayUnion()
+  //     FirebaseFirestore.instance.collection('lostItemsPosts').doc(postId).set(
+  //       {
+  //         'uid': post.uid,
+  //         'pic': FieldValue.arrayUnion(post.pic),
+  //         'pdtName': post.pdtName,
+  //         'pdtDesc': post.pdtDesc,
+  //         'datePublished': post.datePublished,
+  //         'postId': post.postId,
+  //         'postType':post.postType,
+  //       },
+  //     );
+  //
+  //     res = "success";
+  //   } catch (e) {
+  //     res = e.toString();
+  //   }
+  //   return res;
+  // }
 
   //upload OfferAnnouncement
   Future<String> uploadAnnouncementPost(

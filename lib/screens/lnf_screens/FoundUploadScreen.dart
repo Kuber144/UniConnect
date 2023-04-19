@@ -5,19 +5,30 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uniconnect/resources/buysell_methods.dart';
 import 'package:uuid/uuid.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniconnect/resources/firestore_methods.dart';
+import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/util/utils.dart';
-import '../models/user.dart' as model;
-import '../providers/providers.dart';
+
+import '../../models/user.dart' as model;
+import '../../models/user.dart';
+import '../../providers/providers.dart';
+import '../../widgets/text_field_input.dart';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-class List_Item extends StatefulWidget {
-  const List_Item({super.key});
+
+class FoundUploadScreen extends StatefulWidget {
+  const FoundUploadScreen({super.key});
+
   @override
-  State<List_Item> createState() => _List_Item();
+  State<FoundUploadScreen> createState() => _Found_Items();
 }
-class _List_Item extends State<List_Item> {
+
+class _Found_Items extends State<FoundUploadScreen> {
   //final TextEditingController uid = TextEditingController();
   late String uid;
   List<String> pic=[];
@@ -61,7 +72,7 @@ class _List_Item extends State<List_Item> {
 
   void selectImages() async {
 
-    final List<XFile> selectedImages = await imagePicker.pickMultiImage();
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
     if (selectedImages!.isNotEmpty) {
       imageFileList!.addAll(selectedImages);
     }
@@ -90,7 +101,7 @@ class _List_Item extends State<List_Item> {
           return AlertDialog(
             shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            title: const Text('Please choose media to select'),
+            title: Text('Please choose media to select'),
             content: Container(
               height: MediaQuery
                   .of(context)
@@ -105,7 +116,7 @@ class _List_Item extends State<List_Item> {
                       selectImages();
                     },
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.image),
                         Text('From Gallery'),
                       ],
@@ -118,7 +129,7 @@ class _List_Item extends State<List_Item> {
                       selectImages();
                     },
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.camera),
                         Text('From Camera'),
                       ],
@@ -153,7 +164,6 @@ class _List_Item extends State<List_Item> {
       //List<String> pic,
       String productName,
       String productDesc,
-      String sellingprice,
       /*String phoneno,*/) async {
     setState(() {
       _isloading = true;
@@ -179,22 +189,15 @@ class _List_Item extends State<List_Item> {
       }
       print("in upload func  $downloadUrls");
 
-      String res = await BuySellMethods().uploadPost(
+      String res = await FirestoreMethods().uploadLnFPost(
 
-        // destinationController.text,
-        // vehicleController.text,
-        // timeOfDepartureController.text,
-        //
-        // expectedPerHeadChargeController.text,
-        // uid,
-        //
-        // username,
+
           uid,
-
+          "found",
           downloadUrls,
 
 
-          productName, productDesc, sellingprice,postId/* phoneno,*/
+          productName, productDesc,postId/* phoneno,*/
 
 
       );
@@ -279,13 +282,13 @@ class _List_Item extends State<List_Item> {
                     selectImages();
                   }
               ),
-              const SizedBox(height: 20,),
+              SizedBox(height: 20,),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GridView.builder(
                       itemCount: imageFileList!.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3
                       ),
                       itemBuilder: (BuildContext context, int index) {
@@ -300,7 +303,6 @@ class _List_Item extends State<List_Item> {
 
               buildTextField("Product Name", "Product Name",pdtName, false),
               buildTextField("Product Description", "Describe your product here.",pdtDesc, false),
-              buildNumberField("Selling Price", "Estimate Price",sellingPrice, false,6),
               // buildTextField("Hostel Number", "Enter your hostel number", false),
               //buildNumberField("Phone Number", "Enter your phone number",phno, false,10),
               TextButton(
@@ -313,7 +315,7 @@ class _List_Item extends State<List_Item> {
                 ),
                 onPressed: () {
                   if(checkdetails()){
-                    uploadPost(uid, pdtName.text, pdtDesc.text, sellingPrice.text, /*phno.text,*/);
+                    uploadPost(uid, pdtName.text, pdtDesc.text, /*phno.text,*/);
                   }
                 },
                 child: const Text('List Item'),
@@ -336,7 +338,7 @@ class _List_Item extends State<List_Item> {
         decoration: InputDecoration(
             suffixIcon: isPasswordTextField
                 ? IconButton(
-              icon: const Icon(Icons.remove_red_eye, color: Colors.grey),
+              icon: Icon(Icons.remove_red_eye, color: Colors.grey),
               onPressed: () {
 
               },
@@ -368,14 +370,14 @@ class _List_Item extends State<List_Item> {
         keyboardType: TextInputType.number,
 
         inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'\d')),
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
           LengthLimitingTextInputFormatter(len),
         ],
 
         decoration: InputDecoration(
             suffixIcon: isPasswordTextField
                 ? IconButton(
-              icon: const Icon(Icons.remove_red_eye, color: Colors.grey),
+              icon: Icon(Icons.remove_red_eye, color: Colors.grey),
               onPressed: () {
 
               },
@@ -399,10 +401,8 @@ class _List_Item extends State<List_Item> {
     //pic.text = pic.text.trim();
     pdtName.text = pdtName.text.trim();
     pdtDesc.text = pdtDesc.text.trim();
-    sellingPrice.text = sellingPrice.text.trim();
     // phno.text = phno.text.trim();
-    if (pdtName.text.isEmpty || pdtDesc.text.isEmpty ||
-        sellingPrice.text.isEmpty /*|| phno.text.isEmpty*/) {
+    if (pdtName.text.isEmpty || pdtDesc.text.isEmpty  /*|| phno.text.isEmpty*/) {
       showSnackBar("Fields cannot be empty", context);
       return false;
     }

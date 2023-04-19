@@ -29,15 +29,6 @@ import 'package:uniconnect/screens/NavBar.dart';
 // import 'package:uniconnect/screens/carpool_upload_post.dart';
 
 //import '../models/user.dart';
-import 'buy_sell_p1.dart';
-import '../models/user.dart' as MyUser;
-import 'notes_home_page.dart';
-import '../models/FirebaseHelper.dart';
-import '../models/UserModel.dart';
-import '../util/slideshow.dart';
-import 'chat_home_page.dart';
-import 'chat_room_page.dart';
-import 'chat_search_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,19 +37,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/screens/chat_room_page.dart';
 import 'package:uniconnect/models/ChatRoomModel.dart';
 
-import '../main.dart';
-import 'home_page.dart';
-
-import 'package:uniconnect/screens/chat_room_page.dart';
-import 'package:uniconnect/models/ChatRoomModel.dart';
-
-import '../main.dart';
-import 'home_page.dart';
+import '../../main.dart';
 
 
 
 
-class AddPopupCard extends StatefulWidget {
+
+class lnfInnerPostCard extends StatefulWidget {
   final Map<String, dynamic> snap;
   /// {@macro add_todo_popup_card}
   final String hello;
@@ -66,16 +51,15 @@ class AddPopupCard extends StatefulWidget {
   final String username/*,start,destination,charge,vehicle,exstart,exdest,addnote*/;
   final String pdtName;
   final String pdtDesc;
-  final String sellingPrice;
   final String email;
   final List<String> images;
   final Key key;
   /*final DateTime selectdat;*/
-  const AddPopupCard({required this.key,required this.hello,required this.username, required this.pdtName, required this.pdtDesc, required this.sellingPrice, required this.email, required this.images, required this.uid, required this.snap}) : super(key: key);
+  const lnfInnerPostCard({required this.key,required this.hello,required this.username, required this.pdtName, required this.pdtDesc,  required this.email, required this.images, required this.uid, required this.snap}) : super(key: key);
   @override
-  State<AddPopupCard> createState() => _Add_PopupCard(key: key,hello: hello,username: username,pdtName: pdtName,pdtDesc: pdtDesc,sellingPrice:sellingPrice,email: email,images: images,uid: uid);
+  State<lnfInnerPostCard> createState() => _Add_PopupCard(key: key,hello: hello,username: username,pdtName: pdtName,pdtDesc: pdtDesc,email: email,images: images,uid: uid);
 }
-class _Add_PopupCard extends State<AddPopupCard>{
+class _Add_PopupCard extends State<lnfInnerPostCard>{
 
 //CHATGPT
 
@@ -115,11 +99,10 @@ class _Add_PopupCard extends State<AddPopupCard>{
   final String username/*,start,destination,charge,vehicle,exstart,exdest,addnote*/;
   final String pdtName;
   final String pdtDesc;
-  final String sellingPrice;
   final String email;
   final List<String> images;
   final Key key;
-  _Add_PopupCard({required this.key,required this.hello,required this.username, required this.pdtName, required this.pdtDesc, required this.sellingPrice, required this.email, required this.images, required this.uid}) ;
+  _Add_PopupCard({required this.key,required this.hello,required this.username, required this.pdtName, required this.pdtDesc, required this.email, required this.images, required this.uid}) ;
   // bool? get mounted => null;
   Future<ChatRoomModel?> getChatroomModel(UserModel targetUser) async {
 
@@ -327,18 +310,6 @@ class _Add_PopupCard extends State<AddPopupCard>{
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
-                      'Price : Rs. $sellingPrice',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Text(
                       'Seller : $username',
                       style: const TextStyle(
                         fontSize: 15,
@@ -369,7 +340,6 @@ class _Add_PopupCard extends State<AddPopupCard>{
 
                       }
                     },
-
                     child: Text('Contact'),
                   ),
 

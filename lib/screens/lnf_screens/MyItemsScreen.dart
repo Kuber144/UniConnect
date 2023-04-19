@@ -13,10 +13,10 @@ import 'package:uniconnect/util/colors.dart';
 import '../../main.dart';
 
 // import 'buy_sell_post_card.dart';
-import 'buy_sell_post_card2.dart';
+// import 'buy_sell_post_card2.dart';
 
-class FeedScreen2 extends StatelessWidget {
-  const FeedScreen2({Key? key}) : super(key: key);
+class MyItemsScreen extends StatelessWidget {
+  const MyItemsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class FeedScreen2 extends StatelessWidget {
             height: double.infinity,
           ),
           StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('buy_sell_posts').snapshots(),
+            stream: FirebaseFirestore.instance.collection('LnFPosts').snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -81,7 +81,7 @@ class FeedScreen2 extends StatelessWidget {
                   itemCount: filteredDocs.length,
                   itemBuilder: (context,index)=> Column(
                     children: [
-                      BuySellPostCard2(
+                      lnfPostCard(
                         snap: filteredDocs[index].data() ?? {},
                         hello: uuid.v4(),
                       ),
@@ -119,14 +119,14 @@ class FeedScreen2 extends StatelessWidget {
                                   ),
                                 ),
                                 IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.white, // set the icon color to white
-                                  ),
+                                icon: Icon(
+                                Icons.delete,
+    color: Colors.white, // set the icon color to white
+    ),
                                   onPressed: () {
                                     filteredDocs[index].reference.delete()
                                         .then((value) {
-                                      const FeedScreen2();
+                                      const MyItemsScreen();
                                       print('Document ${filteredDocs[index]
                                           .id} deleted successfully.');
                                     }).catchError((error) {
