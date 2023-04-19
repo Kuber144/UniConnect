@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  carousel_slider: ^4.2.1
   flutter_inappwebview: ^5.7.2+3
   share_plus: ^6.3.1
   webview_flutter: ^4.0.7
@@ -83,6 +84,8 @@ flutter:
     - assets/slideshow_pics/ss_1.jpg
     - assets/slideshow_pics/ss_2.jpg
     - assets/slideshow_pics/ss_3.jpg
+    - assets/slideshow_pics/ss_4.jpeg
+    - assets/slideshow_pics/ss_5.png
     - assets/loading.gif
     - assets/background/navbar_bg.jpg
   # An image asset can refer to one or more resolution-specific "variants", see

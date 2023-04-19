@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:io';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,6 +31,7 @@ import 'package:uniconnect/screens/carpool_upload_post.dart';
 //import '../models/user.dart';
 import 'buy_sell_p1.dart';
 import '../models/user.dart' as MyUser;
+import 'buy_sell_post_innerCard.dart';
 import 'notes_home_page.dart';
 import '../models/FirebaseHelper.dart';
 import '../models/UserModel.dart';
