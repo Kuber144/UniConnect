@@ -18,11 +18,10 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(15.5),
       child: SizedBox(
 
-          height: double.infinity,
-          width: double.infinity,
+          height: 300,
           child: Slideshow(images: images),
 
       ),
