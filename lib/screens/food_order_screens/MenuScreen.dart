@@ -12,9 +12,8 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   List<String> images = [
-    'assets/slideshow_pics/ss_1.jpg',
-    'assets/slideshow_pics/ss_2.jpg',
-    'assets/slideshow_pics/ss_3.jpg',
+    'assets/menu/chillout.jpeg',
+    'assets/menu/chillout2.jpeg',
   ];
 
   late String? restaurant="";
@@ -34,52 +33,59 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text('Order from Locals'),
-        centerTitle: false,
-        actions: [
-          TextButton(
-            onPressed: () {
-
-            },
-            child: const Text(
-              'Post',
-              style: TextStyle(
-                color: Colors.blueAccent,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: 10,),
-
-          // FormHelper.dropDownWidgetWithLabel(
-          //     context,
-          //     "Restaurant",
-          //     "Choose Restaurant",
-          //     restaurant,
-          //     all_restaurants,
-          //     (onChangedVal){
-          //       restaurant = onChangedVal;
-          //     },
-          //     (onValidateVal){
-          //
-          //     }
-          // )
-        ],
-      ),
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     backgroundColor: mobileBackgroundColor,
+    //     leading: IconButton(
+    //       icon: const Icon(Icons.arrow_back),
+    //       onPressed: () {
+    //         Navigator.pop(context);
+    //       },
+    //     ),
+    //     title: const Text('Order from Locals'),
+    //     centerTitle: false,
+    //     actions: [
+    //       TextButton(
+    //         onPressed: () {
+    //
+    //         },
+    //         child: const Text(
+    //           'Post',
+    //           style: TextStyle(
+    //             color: Colors.blueAccent,
+    //             fontWeight: FontWeight.bold,
+    //             fontSize: 16,
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    //   body: Column(
+    //     children: [
+    //       SizedBox(height: 10,),
+    //
+    //       // FormHelper.dropDownWidgetWithLabel(
+    //       //     context,
+    //       //     "Restaurant",
+    //       //     "Choose Restaurant",
+    //       //     restaurant,
+    //       //     all_restaurants,
+    //       //     (onChangedVal){
+    //       //       restaurant = onChangedVal;
+    //       //     },
+    //       //     (onValidateVal){
+    //       //
+    //       //     }
+    //       // )
+    //     ],
+    //   ),
+    // );
+    return Padding(
+        padding: const EdgeInsets.all(15.5),
+    child: SizedBox(
+    height: 700,
+    child: Slideshow(images: images),
+    ),
     );
   }
 }

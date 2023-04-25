@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import '../../main.dart';
-import 'lnf_card_user.dart';
+import '../../../main.dart';
+import 'buy_sell_post_card_user.dart';
 
-class MyItemsScreen extends StatelessWidget {
-  const MyItemsScreen({Key? key}) : super(key: key);
+class FeedScreen2 extends StatelessWidget {
+  const FeedScreen2({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,9 @@ class MyItemsScreen extends StatelessWidget {
             height: double.infinity,
           ),
           StreamBuilder(
-            stream:
-                FirebaseFirestore.instance.collection('LnFPosts').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('buy_sell_posts')
+                .snapshots(),
             builder: (BuildContext context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -47,8 +48,8 @@ class MyItemsScreen extends StatelessWidget {
                   itemCount: filteredDocs.length,
                   itemBuilder: (context, index) => Column(
                     children: [
-                      lnfPostCardUser(
-                        snap: filteredDocs[index].data() ?? {},
+                      BuySellPostCard2(
+                        snap: filteredDocs[index].data(),
                         hello: uuid.v4(),
                       ),
                       GestureDetector(

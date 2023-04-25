@@ -92,6 +92,8 @@ flutter:
     - assets/background/navbar_bg.jpg
     - assets/pdf.png
     - assets/pdf_1.png
+    - assets/menu/chillout.jpeg
+    - assets/menu/chillout2.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

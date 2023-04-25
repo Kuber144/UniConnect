@@ -1,20 +1,21 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uniconnect/screens/carpool_screens/carpool_My_Requests.dart';
-import 'package:uniconnect/screens/carpool_screens/carpool_upload_post.dart';
-import 'package:uniconnect/screens/carpool_screens/post_card.dart';
-import 'package:uniconnect/screens/lnf_screens/LostUploadScreen.dart';
+import 'package:uniconnect/screens/lnf_screens/lnfUploadScreen.dart';
 import 'package:uniconnect/util/colors.dart';
-
-// import '../main.dart';
 import '../../main.dart';
-import '../buy_sell_post_card.dart';
 import 'lnf_post_card.dart';
 
-class LostItemsScreen extends StatelessWidget {
+class LostItemsScreen extends StatefulWidget {
   const LostItemsScreen({Key? key}) : super(key: key);
+
+  @override
+  LostItemsScreenState createState() => LostItemsScreenState();
+}
+
+class LostItemsScreenState extends State<LostItemsScreen> {
+  final TextEditingController _searchTextController = TextEditingController();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> filteredDocs = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class LostItemsScreen extends StatelessWidget {
                   pageBuilder: (BuildContext context,
                       Animation<double> animation,
                       Animation<double> secAnimation) {
-                    return const LostUploadScreen();
+                    return const lnfUploadScreen(type: "Lost");
                   }));
         },
         backgroundColor: iconcolor,
@@ -55,40 +56,91 @@ class LostItemsScreen extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
           ),
-          StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('LnFPosts').snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              final filteredDocs = snapshot.data!.docs.where((doc) => doc['uid'] != currentUserId).toList();
-              if (filteredDocs.isEmpty) {
-                return const Center(
-                  child: Text('No data'),
-                );
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
-                child:ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: filteredDocs.length,
-                  itemBuilder: (context,index)=> Column(
-                    children: [
-                      lnfPostCard(
-                        snap: filteredDocs[index].data(), hello: uuid.v4(),
-                      ),
-                      const SizedBox(height: 13,),
-                    ],
+          Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: TextField(
+                  controller: _searchTextController,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Search by item name',
+                    hintStyle: const TextStyle(color: Colors.black),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: iconcolor,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey.withOpacity(0.3),
                   ),
                 ),
-              );
-            },
+              ),
+              Expanded(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('LnFPosts')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    final filteredDocs = _searchTextController.text.isEmpty
+                        ? snapshot.data!.docs
+                            .where((doc) =>
+                                doc['uid'] != currentUserId &&
+                                doc['postType'] == "Lost")
+                            .toList()
+                        : snapshot.data!.docs
+                            .where((doc) =>
+                                doc['uid'] != currentUserId &&
+                                doc['postType'] == "Lost" &&
+                                doc['pdtName']
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(_searchTextController.text
+                                        .toLowerCase()))
+                            .toList();
+                    if (filteredDocs.isEmpty) {
+                      return const Center(
+                        child: Text('No data'),
+                      );
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 25),
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: filteredDocs.length,
+                        itemBuilder: (context, index) => Column(
+                          children: [
+                            lnfPostCard(
+                              snap: filteredDocs[index].data(),
+                              hello: uuid.v4(),
+                            ),
+                            const SizedBox(
+                              height: 13,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
-
 }

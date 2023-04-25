@@ -4,8 +4,6 @@ import 'package:uniconnect/screens/food_order_screens/FoodOrderRequests.dart';
 import 'AnnouncementScreen.dart';
 import 'MenuScreen.dart';
 
-
-
 class Food_Home_Page extends StatefulWidget {
   const Food_Home_Page({Key? key}) : super(key: key);
 
@@ -23,7 +21,6 @@ class _Food_Home_PageState extends State<Food_Home_Page> {
 
   void _onItemTapped(int index) {
     setState(() {
-
       _selectedIndex = index;
     });
   }

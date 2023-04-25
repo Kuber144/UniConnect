@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,28 +10,30 @@ import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
-import 'package:uniconnect/screens/chat_room_page.dart';
+import 'package:uniconnect/util/slideshow.dart';
+import '../chat_room_page.dart';
 import '../../main.dart';
 import '../profile_screens/user_profile_page.dart';
 
-class lnfInnerPostCard extends StatefulWidget {
+class AddPopupCard extends StatefulWidget {
   final Map<String, dynamic> snap;
   final String hello;
   final String uid;
   final String username;
   final String pdtName;
   final String pdtDesc;
+  final String sellingPrice;
   final String email;
   final List<String> images;
   final Key key;
 
-  /*final DateTime selectdat;*/
-  const lnfInnerPostCard(
+  const AddPopupCard(
       {required this.key,
       required this.hello,
       required this.username,
       required this.pdtName,
       required this.pdtDesc,
+      required this.sellingPrice,
       required this.email,
       required this.images,
       required this.uid,
@@ -37,25 +41,25 @@ class lnfInnerPostCard extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<lnfInnerPostCard> createState() => _Add_PopupCard(
+  State<AddPopupCard> createState() => _Add_PopupCard(
       key: key,
       hello: hello,
       username: username,
       pdtName: pdtName,
       pdtDesc: pdtDesc,
+      sellingPrice: sellingPrice,
       email: email,
       images: images,
       uid: uid);
 }
 
-class _Add_PopupCard extends State<lnfInnerPostCard> {
+class _Add_PopupCard extends State<AddPopupCard> {
   final String hello;
   final String uid;
-  final String
-      username /*,start,destination,charge,vehicle,exstart,exdest,addnote*/;
-
+  final String username;
   final String pdtName;
   final String pdtDesc;
+  final String sellingPrice;
   final String email;
   final List<String> images;
   final Key key;
@@ -66,24 +70,21 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
       required this.username,
       required this.pdtName,
       required this.pdtDesc,
+      required this.sellingPrice,
       required this.email,
       required this.images,
       required this.uid});
 
-  // bool? get mounted => null;
   Future<ChatRoomModel?> getChatroomModel(UserModel targetUser) async {
     ChatRoomModel? chatRoom;
 
-    //var widget;
     String curUid = FirebaseAuth.instance.currentUser!.uid;
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("chatrooms")
         .where("participants.$curUid", isEqualTo: true)
         .where("participants.${targetUser.uid}", isEqualTo: true)
         .get();
-    if (snapshot.docs.isNotEmpty) {
-      //  Fetch the existing chatroom
-      //   log("Chatroom already exists");
+    if (snapshot.docs.length > 0) {
       var docdata = snapshot.docs[0].data();
       ChatRoomModel existingChatroom =
           ChatRoomModel.fromMap(docdata as Map<String, dynamic>);
@@ -92,9 +93,6 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
       User? currentUser = FirebaseAuth.instance.currentUser;
       UserModel? thisUserModel =
           await FirebaseHelper.getUserModelById(currentUser!.uid);
-      //  create a new chatroom
-      //   log("Chatroom does not exist");
-      //var widget;
       ChatRoomModel newChatroom = ChatRoomModel(
         chatroomid: uuid.v1(),
         lastMessage: "",
@@ -103,24 +101,19 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
           targetUser.uid.toString(): true,
         },
       );
-
       await FirebaseFirestore.instance
           .collection("chatrooms")
           .doc(newChatroom.chatroomid)
           .set(newChatroom.toMap());
       chatRoom = newChatroom;
     }
-
     return chatRoom;
   }
-
-  late List<String> tempimages = [];
-  bool b = false;
 
   List<String>? getPic() {
     List<dynamic> dynamicList = widget.snap['pic'];
     List<String>? stringList =
-        dynamicList?.map((item) => item.toString())?.toList();
+        dynamicList.map((item) => item.toString()).toList();
     return stringList;
   }
 
@@ -128,16 +121,20 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
     // Create a reference to the "users" collection in Firestore
     final CollectionReference usersRef =
         FirebaseFirestore.instance.collection("users");
+
     // Use the "where" method to filter the documents by "uid"
     final QuerySnapshot<Object?> querySnapshot =
         await usersRef.where("uid", isEqualTo: uid).get();
+
     // Check if any documents are returned
     if (querySnapshot.docs.isNotEmpty) {
       // Retrieve the first document (assuming "uid" is unique)
       final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
           querySnapshot.docs[0] as DocumentSnapshot<Map<String, dynamic>>;
+
       // Retrieve the data from the document
       final Map<String, dynamic>? userMap = documentSnapshot.data();
+
       // Return the user data as a Map<String, dynamic>
       return userMap;
     } else {
@@ -170,7 +167,7 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
               child: Column(
                 children: [
                   const SizedBox(
-                    height: 40,
+                    height: 30,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 25),
@@ -242,6 +239,20 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Text(
+                      'Price : Rs. $sellingPrice',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -254,10 +265,9 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
                         );
                       },
                       child: Text(
-                        widget.snap['postType'] == 'Found'
-                            ? 'Found by ${widget.snap['pdtName']}'
-                            : 'Owned by ${widget.snap['pdtName']}',
+                        'Seller : $username',
                         style: const TextStyle(
+                          fontWeight: FontWeight.bold,
                           fontSize: 15,
                         ),
                         textAlign: TextAlign.center,
@@ -279,11 +289,7 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
                               children: [
                                 CircularProgressIndicator(),
                                 SizedBox(width: 16),
-                                Text(
-                                  widget.snap['postType'] == 'Found'
-                                      ? 'Contacting founder'
-                                      : 'Contacting owner',
-                                ),
+                                Text('Contacting the seller...'),
                               ],
                             ),
                           );
@@ -318,17 +324,13 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
                       } catch (e) {
                         // print('Error contacting the seller: $e');
                         Fluttertoast.showToast(
-                            msg: "Error contacting the user");
+                            msg: "Error contacting the seller");
                         Navigator.pop(context); // Hide loading indicator
                       }
                     },
-                    child: Text(
-                      widget.snap['postType'] == 'Found'
-                          ? 'Contact Founder'
-                          : 'Contact Owner',
-                    ),
+                    child: const Text('Contact the seller'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                 ],

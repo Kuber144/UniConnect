@@ -1,6 +1,4 @@
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class Slideshow extends StatefulWidget {
@@ -19,7 +17,7 @@ class _SlideshowState extends State<Slideshow> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+    Timer.periodic(const Duration(seconds: 15), (Timer timer) {
       if (_currentPage < widget.images.length - 1) {
         _currentPage++;
       } else {
@@ -27,7 +25,7 @@ class _SlideshowState extends State<Slideshow> {
       }
       _pageController.animateToPage(
         _currentPage,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 1500),
         curve: Curves.easeIn,
       );
     });
@@ -39,9 +37,21 @@ class _SlideshowState extends State<Slideshow> {
       controller: _pageController,
       itemCount: widget.images.length,
       itemBuilder: (BuildContext context, int index) {
-        return Image.asset(
-          widget.images[index],
-          fit: BoxFit.cover,
+        return Stack(
+          children: [
+            Center(
+              child: FadeInImage.assetNetwork(
+                placeholder: 'assets/logo_png.png',
+                image: widget.images[index],
+                fit: BoxFit.contain,
+                imageErrorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                  return Image.asset('assets/logo_png.png', // Specify your default image or error message widget here
+                      fit: BoxFit.contain
+                  );
+                },
+              ),
+            ),
+          ],
         );
       },
     );

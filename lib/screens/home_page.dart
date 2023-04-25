@@ -1,51 +1,72 @@
-
-
 import 'dart:async';
-
-// import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:uniconnect/screens/carpool_screens/carpool_feed.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
+import 'package:uniconnect/screens/carpool_screens/carpool_home_page.dart';
 import 'package:uniconnect/screens/chat_home_page.dart';
 import 'package:uniconnect/screens/food_order_screens/food_home_page.dart';
 import 'package:uniconnect/screens/lnf_screens/lnf_home_page.dart';
 import 'package:uniconnect/screens/mess_feedback_screens/mess_feedback_feed.dart';
 import 'package:uniconnect/util/slideshow.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:uniconnect/providers/providers.dart';
-// import 'package:flutter/painting.dart';
-// import 'package:flutter/rendering.dart';
-// import 'package:uniconnect/responsive/mobile_screen_layout.dart';
 import 'package:uniconnect/screens/NavBar.dart';
-// import 'package:uniconnect/models/user.dart' as model;
-import 'package:uniconnect/screens/carpool_screens/carpool_upload_post.dart';
-
-//import '../models/user.dart';
-import 'buy_sell_p1.dart';
-import '../models/user.dart' as MyUser;
+import 'buy_sell_screens/buy_sell_home_page.dart';
 import 'notes_home_page.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
   @override
   _HomePageState createState() => _HomePageState();
 }
-
 class _HomePageState extends State<HomePage> {
-  List<String> images = [
-    'assets/slideshow_pics/ss_4.jpeg',
-    'assets/slideshow_pics/ss_5.png',
-    // 'assets/slideshow_pics/ss_3.jpg',
-  ];
+  List<String> images = [];
   String imageUrl="https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/default_prof.jpg?alt=media&token=2488a918-e680-4445-a04b-5627c62dcf46";
   String name='';
   String email='';
   String bio="",hostel=" ",degree="",gradyear="",phone="";
+
+
+  Future<void> getAllpics() async {
+    List<String> images1 = [];
+    try {
+      DocumentReference documentRef1 =
+      FirebaseFirestore.instance.collection('announcement').doc('image1');
+      DocumentReference documentRef2 =
+      FirebaseFirestore.instance.collection('announcement').doc('image2');
+      DocumentReference documentRef3 =
+      FirebaseFirestore.instance.collection('announcement').doc('image3');
+      DocumentReference documentRef4 =
+      FirebaseFirestore.instance.collection('announcement').doc('image4');
+      DocumentReference documentRef5 =
+      FirebaseFirestore.instance.collection('announcement').doc('image5');
+      DocumentSnapshot documentSnapshot1 = await documentRef1.get();
+      DocumentSnapshot documentSnapshot2 = await documentRef2.get();
+      DocumentSnapshot documentSnapshot3 = await documentRef3.get();
+      DocumentSnapshot documentSnapshot4 = await documentRef4.get();
+      DocumentSnapshot documentSnapshot5 = await documentRef5.get();
+      if (documentSnapshot1.exists && documentSnapshot2.exists && documentSnapshot3.exists) {
+        String image1 = documentSnapshot1['url'].toString();
+        String image2 = documentSnapshot2['url'].toString();
+        String image3 = documentSnapshot3['url'].toString();
+        String image4 = documentSnapshot4['url'].toString();
+        String image5 = documentSnapshot5['url'].toString();
+        images1.add(image1);
+        images1.add(image2);
+        images1.add(image3);
+        images1.add(image4);
+        images1.add(image5);
+        setState(() {
+          images=images1;
+        });
+      } else {
+        print('One or more documents do not exist');
+      }
+    } catch (error) {
+      // Fluttertoast.showToast(msg: "Error in loading images: $error");
+    }
+  }
+
 
   Future<void> getUserDetails() async {
     String uid= FirebaseAuth.instance.currentUser!.uid;
@@ -67,6 +88,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getUserDetails();
+    getAllpics();
   }
   @override
   Widget build(BuildContext context) {
@@ -191,12 +213,10 @@ class _HomePageState extends State<HomePage> {
                         physics: const BouncingScrollPhysics(),
                         children: [
                           const SizedBox(height: 32),
-
                           SizedBox(
                             height: 300,
                             child: Slideshow(images: images),
                           ),
-
                           const SizedBox(height: 16),
                           const Center(
                             child: Text(
@@ -227,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const Buy_sell_p1(),
+                                        builder: (context) => const Buy_sell_home_page(),
                                       ),
                                     );}
                                 },
@@ -240,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const FeedScreen(),
+                                        builder: (context) => const carpool_home_page(),
                                       ),
                                     );}},
                               ),
@@ -264,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                               ),
                               MyCardMenu(
-                                title: 'GAMES',
+                                title: 'LnF',
                                 icon:   'assets/inner_icons/games.png',
                                 onTap:() {
 
@@ -300,7 +320,6 @@ class _HomePageState extends State<HomePage> {
                                       );}
                                   }
                                   else{
-                                    print(hostel);
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -344,12 +363,8 @@ class _HomePageState extends State<HomePage> {
 
                             ],
                           ),
-
                           const SizedBox(height: 35),
                           const SizedBox(height: 35),
-                          // const SizedBox(height: 28),
-                          // const SizedBox(height: 28),
-                          // const SizedBox(height: 28),
                         ],
                       ),
                     ),
@@ -387,7 +402,6 @@ class MyCardMenu extends StatefulWidget {
 class _MyCardMenuState extends State<MyCardMenu> {
   Color _cardColor = Colors.white;
   Color _textColor = Colors.teal;
-
   void _handleTap() {
     setState(() {
       _cardColor = Colors.grey;
@@ -404,7 +418,6 @@ class _MyCardMenuState extends State<MyCardMenu> {
       });
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

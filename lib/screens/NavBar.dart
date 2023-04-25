@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:uniconnect/screens/login_screen.dart';
 import 'package:uniconnect/screens/misc_screens/ReportBug.dart';
 import 'package:uniconnect/screens/misc_screens/request_feature.dart';
-import 'package:uniconnect/screens/profile_view.dart';
+import 'package:uniconnect/screens/profile_screens/profile_view.dart';
 import "package:share_plus/share_plus.dart";
 import 'package:uniconnect/screens/chat_home_page.dart';
 import '../models/FirebaseHelper.dart';

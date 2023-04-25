@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:uniconnect/screens/lnf_screens/FoundItemsScreen.dart';
-import 'package:uniconnect/screens/lnf_screens/LostItemsScreen.dart';
-import 'package:uniconnect/screens/lnf_screens/MyItemsScreen.dart';
+import 'package:uniconnect/util/colors.dart';
+import 'carpool_feed.dart';
+import 'carpool_My_Requests.dart';
+import 'carpool_upload_post.dart';
 
-class lnfHomePage extends StatefulWidget {
-  const lnfHomePage({super.key});
+class carpool_home_page extends StatefulWidget {
+  const carpool_home_page({super.key});
 
   @override
-  State<lnfHomePage> createState() => _lnf_home_page();
+  State<carpool_home_page> createState() => _carpool_home_page();
 }
 
-class _lnf_home_page extends State<lnfHomePage> {
+class _carpool_home_page extends State<carpool_home_page> {
   static int _currentIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
-    LostItemsScreen(),
-    FoundItemsScreen(),
-    MyItemsScreen()
+    FeedScreen(),
+    Carpool_upload_post(),
+    My_Requests(),
   ];
 
   @override
@@ -23,7 +24,7 @@ class _lnf_home_page extends State<lnfHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text("Lost and Found"),
+        title: const Text("Carpool"),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_currentIndex),
@@ -31,19 +32,27 @@ class _lnf_home_page extends State<lnfHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.location_off, size: 35, color: Colors.red),
-              label: 'Lost Items'),
+              icon: Icon(
+                Icons.car_crash_sharp,
+                size: 35,
+                color: iconcolor,
+              ),
+              label: 'See Requests'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.check_circle, size: 35, color: Colors.green),
-            label: 'Found Items',
+            icon: Icon(
+              Icons.add_box_outlined,
+              size: 35,
+              color: iconcolor,
+            ),
+            label: 'Post Request',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.access_time,
               size: 35,
-              color: Colors.blue,
+              color: iconcolor,
             ),
-            label: 'My Posts',
+            label: 'My Requests',
           ),
         ],
         currentIndex: _currentIndex,

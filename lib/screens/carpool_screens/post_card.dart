@@ -1,173 +1,259 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/widgets/hero_dialog_route.dart';
+
+import '../../main.dart';
+import '../../models/ChatRoomModel.dart';
+import '../../models/FirebaseHelper.dart';
+import '../../models/UserModel.dart';
+import '../chat_room_page.dart';
+import '../profile_screens/user_profile_page.dart';
+
 class PostCard extends StatefulWidget {
   final Map<String, dynamic> snap;
 
   final String hello;
-  const PostCard({Key? key, required this.snap, required this.hello}) : super(key: key);
+
+  const PostCard({Key? key, required this.snap, required this.hello})
+      : super(key: key);
 
   @override
   _PostCardState createState() => _PostCardState();
 }
 
 class _PostCardState extends State<PostCard> {
+  Future<ChatRoomModel?> getChatroomModel(UserModel targetUser) async {
+    ChatRoomModel? chatRoom;
 
+    String curUid = FirebaseAuth.instance.currentUser!.uid;
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .where("participants.$curUid", isEqualTo: true)
+        .where("participants.${targetUser.uid}", isEqualTo: true)
+        .get();
+    if (snapshot.docs.isNotEmpty) {
+      var docdata = snapshot.docs[0].data();
+      ChatRoomModel existingChatroom =
+          ChatRoomModel.fromMap(docdata as Map<String, dynamic>);
+      chatRoom = existingChatroom;
+    } else {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      UserModel? thisUserModel =
+          await FirebaseHelper.getUserModelById(currentUser!.uid);
+      ChatRoomModel newChatroom = ChatRoomModel(
+        chatroomid: uuid.v1(),
+        lastMessage: "",
+        participants: {
+          thisUserModel!.uid.toString(): true,
+          targetUser.uid.toString(): true,
+        },
+      );
+      await FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(newChatroom.chatroomid)
+          .set(newChatroom.toMap());
+      chatRoom = newChatroom;
+    }
+    return chatRoom;
+  }
 
-  String getHello()
-  {
+  Future<Map<String, dynamic>?> getUserDetails(String uid) async {
+    // Create a reference to the "users" collection in Firestore
+    final CollectionReference usersRef =
+        FirebaseFirestore.instance.collection("users");
+
+    // Use the "where" method to filter the documents by "uid"
+    final QuerySnapshot<Object?> querySnapshot =
+        await usersRef.where("uid", isEqualTo: uid).get();
+
+    // Check if any documents are returned
+    if (querySnapshot.docs.isNotEmpty) {
+      // Retrieve the first document (assuming "uid" is unique)
+      final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          querySnapshot.docs[0] as DocumentSnapshot<Map<String, dynamic>>;
+
+      // Retrieve the data from the document
+      final Map<String, dynamic>? userMap = documentSnapshot.data();
+
+      // Return the user data as a Map<String, dynamic>
+      return userMap;
+    } else {
+      // No document found for the given uid, return null
+      return null;
+    }
+  }
+
+  String getHello() {
     return widget.hello;
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-    onTap: () {
-      Navigator.of(context).push(HeroDialogRoute(builder: (context){
-        return _AddPopupCard(key: UniqueKey(), hello: getHello(),username: widget.snap['username'], start: widget.snap['start'], destination: widget.snap['destination'], charge: widget.snap['expectedPerHeadCharge'], vehicle: widget.snap['vehicle'], exstart: widget.snap['exacstart'], exdest: widget.snap['exacdest'], addnote: widget.snap['addnote'], selectdat: (widget.snap['timeOfDeparture'] as Timestamp).toDate(),);
-      }, settings:const RouteSettings(name: "add_popup_card")));
-    },
-      child: Hero(
-      tag: widget.hello,
-      createRectTween: (begin,end){
-        return CustomRectTween(begin: begin!,end: end!);
+      onTap: () {
+        Navigator.of(context).push(HeroDialogRoute(
+            builder: (context) {
+              return _AddPopupCard(
+                key: UniqueKey(),
+                hello: getHello(),
+                username: widget.snap['username'],
+                start: widget.snap['start'],
+                destination: widget.snap['destination'],
+                charge: widget.snap['expectedPerHeadCharge'],
+                vehicle: widget.snap['vehicle'],
+                exstart: widget.snap['exacstart'],
+                exdest: widget.snap['exacdest'],
+                addnote: widget.snap['addnote'],
+                selectdat:
+                    (widget.snap['timeOfDeparture'] as Timestamp).toDate(),
+                uidposter: widget.snap['uid'],
+              );
+            },
+            settings: const RouteSettings(name: "add_popup_card")));
       },
-      child:Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 22,
-                  backgroundImage: NetworkImage(
-                      widget.snap['profilepic'] ?? ''),
-                ),
-                const SizedBox(width: 8),
-                Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.snap['username'] ?? '',
-                        style: const TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        DateFormat.yMMMd().format(widget.snap['datePublished'].toDate(),),
-                        style: const TextStyle(fontSize: 12, color: mobileSearchColor),
-                      ),
-                    ],
-                  ),
-                // IconButton(
-                //   onPressed: () {
-                //     showDialog(
-                //       context: context,
-                //       builder: (context) =>
-                //           Dialog(
-                //             child: ListView(
-                //               padding: const EdgeInsets.symmetric(
-                //                 vertical: 16,
-                //               ),
-                //               shrinkWrap: true,
-                //               children: [
-                //                 'Delete',
-                //               ].map(
-                //                     (e) =>
-                //                     InkWell(
-                //                       onTap: () {},
-                //                       child: Container(
-                //                         padding: const EdgeInsets.symmetric(
-                //                           vertical: 12,
-                //                           horizontal: 16,
-                //                         ),
-                //                         child: Text(e),
-                //                       ),
-                //                     ),
-                //               ).toList(),
-                //             ),
-                //           ),
-                //     );
-                //   },
-                //   icon: const Icon(Icons.more_vert),
-                // ),
-              ],
-            ),
-          ),
-
-          // BODY SECTION BEGINS
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            elevation: 0,
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flex(
-                  direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      child: Hero(
+        tag: widget.hello,
+        createRectTween: (begin, end) {
+          return CustomRectTween(begin: begin!, end: end!);
+        },
+        child: Card(
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          color: Colors.white,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: Row(
                   children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left:28.0,top: 15),
-                        child: Text(
-                          '${widget.snap['start']} \u27A4 ${widget.snap['destination']}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => User_Profile_Page(
+                              uid: widget.snap['uid']!,
+                            ),
                           ),
-                        ),
+                        );
+                      },
+                      child: CircleAvatar(
+                        radius: 22,
+                        backgroundImage:
+                            NetworkImage(widget.snap['profilepic'] ?? ''),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 30,bottom: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    const SizedBox(width: 8),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${widget.snap['vehicle'] ?? ''}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => User_Profile_Page(
+                                  uid: widget.snap['uid']!,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            widget.snap['username'] ?? '',
+                            style: const TextStyle(
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 4),
                         Text(
-                          '${widget.snap['expectedPerHeadCharge'] ?? ''}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${(widget.snap['timeOfDeparture'] as Timestamp).toDate().day} ${_getMonth((widget.snap['timeOfDeparture'] as Timestamp).toDate().month)} ${(widget.snap['timeOfDeparture'] as Timestamp).toDate().year}, ${_formatTime((widget.snap['timeOfDeparture'] as Timestamp).toDate())}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          DateFormat.yMMMd().format(
+                            widget.snap['datePublished'].toDate(),
+                          ),
+                          style: const TextStyle(
+                              fontSize: 12, color: mobileSearchColor),
                         ),
                       ],
                     ),
+                  ],
+                ),
+              ),
+
+              // BODY SECTION BEGINS
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 0,
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flex(
+                      direction: Axis.horizontal,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 28.0, top: 15),
+                            child: Text(
+                              '${widget.snap['start']} \u27A4 ${widget.snap['destination']}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 30, bottom: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${widget.snap['vehicle'] ?? ''}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                '${widget.snap['expectedPerHeadCharge'] ?? ''}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                '${(widget.snap['timeOfDeparture'] as Timestamp).toDate().day} ${_getMonth((widget.snap['timeOfDeparture'] as Timestamp).toDate().month)} ${(widget.snap['timeOfDeparture'] as Timestamp).toDate().year}, ${_formatTime((widget.snap['timeOfDeparture'] as Timestamp).toDate())}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
+        ),
       ),
     );
   }
-
 }
+
 String _getMonth(int month) {
   switch (month) {
     case 1:
@@ -199,19 +285,101 @@ String _getMonth(int month) {
   }
 }
 
+Future<ChatRoomModel?> getChatroomModel(UserModel targetUser) async {
+  ChatRoomModel? chatRoom;
+
+  String curUid = FirebaseAuth.instance.currentUser!.uid;
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection("chatrooms")
+      .where("participants.$curUid", isEqualTo: true)
+      .where("participants.${targetUser.uid}", isEqualTo: true)
+      .get();
+  if (snapshot.docs.isNotEmpty) {
+    var docdata = snapshot.docs[0].data();
+    ChatRoomModel existingChatroom =
+        ChatRoomModel.fromMap(docdata as Map<String, dynamic>);
+    chatRoom = existingChatroom;
+  } else {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    UserModel? thisUserModel =
+        await FirebaseHelper.getUserModelById(currentUser!.uid);
+    ChatRoomModel newChatroom = ChatRoomModel(
+      chatroomid: uuid.v1(),
+      lastMessage: "",
+      participants: {
+        thisUserModel!.uid.toString(): true,
+        targetUser.uid.toString(): true,
+      },
+    );
+    await FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(newChatroom.chatroomid)
+        .set(newChatroom.toMap());
+    chatRoom = newChatroom;
+  }
+  return chatRoom;
+}
+
 String _formatTime(DateTime dateTime) {
   final hour = dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour;
   final minute = dateTime.minute.toString().padLeft(2, '0');
   final period = dateTime.hour < 12 ? 'am' : 'pm';
   return '$hour:$minute $period';
 }
-class _AddPopupCard extends StatelessWidget {
-  /// {@macro add_todo_popup_card}
-  final String hello;
-  final String username,start,destination,charge,vehicle,exstart,exdest,addnote;
-  final DateTime selectdat;
-  const _AddPopupCard({Key? key,required this.hello, required this.start, required this.destination, required this.charge, required this.vehicle, required this.exstart, required this.exdest, required this.addnote, required this.selectdat, required this.username}) : super(key: key);
 
+Future<Map<String, dynamic>?> getUserDetails(String uid) async {
+  // Create a reference to the "users" collection in Firestore
+  final CollectionReference usersRef =
+      FirebaseFirestore.instance.collection("users");
+
+  // Use the "where" method to filter the documents by "uid"
+  final QuerySnapshot<Object?> querySnapshot =
+      await usersRef.where("uid", isEqualTo: uid).get();
+
+  // Check if any documents are returned
+  if (querySnapshot.docs.isNotEmpty) {
+    // Retrieve the first document (assuming "uid" is unique)
+    final DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+        querySnapshot.docs[0] as DocumentSnapshot<Map<String, dynamic>>;
+
+    // Retrieve the data from the document
+    final Map<String, dynamic>? userMap = documentSnapshot.data();
+
+    // Return the user data as a Map<String, dynamic>
+    return userMap;
+  } else {
+    // No document found for the given uid, return null
+    return null;
+  }
+}
+
+class _AddPopupCard extends StatelessWidget {
+  final String hello;
+  final String username,
+      start,
+      destination,
+      charge,
+      vehicle,
+      exstart,
+      exdest,
+      addnote,
+      uidposter;
+  final DateTime selectdat;
+
+  const _AddPopupCard(
+      {Key? key,
+      required this.hello,
+      required this.start,
+      required this.destination,
+      required this.charge,
+      required this.vehicle,
+      required this.exstart,
+      required this.exdest,
+      required this.addnote,
+      required this.selectdat,
+      required this.username,
+      required this.uidposter})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -226,91 +394,174 @@ class _AddPopupCard extends StatelessWidget {
           child: Material(
             color: cardcolor,
             elevation: 2,
-            shape: 
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
             child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 40,),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 40,
                   ),
-                ),
-                const SizedBox(height: 20,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:[
-                    Text(
-                    '$start \u27A4 $destination',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => User_Profile_Page(
+                            uid: uidposter,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      username,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-            ],
-                ),
-                const SizedBox(height: 20,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Text(
-                  'Exact start address:\n $exstart',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                  const SizedBox(
+                    height: 20,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                ),
-                const SizedBox(height: 10,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Text(
-                    'Exact destination address:\n $exdest',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                    textAlign: TextAlign.center,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '$start \u27A4 $destination',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 10,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:[
-                    Text(
-                      'Preferred Vehicle: $vehicle \nExpected price per head: $charge',
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Text(
+                      'Exact start address:\n $exstart',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                  ],
-                ),
-                Text(
-                  'Time of departure: ${selectdat.day} ${_getMonth(selectdat.month)} ${selectdat.year}, ${_formatTime(selectdat)}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Text(
-                    addnote == "" ? 'No additional notes' : 'Additional notes:\n $addnote',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(height: 30,),
-              ],
-            ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Text(
+                      'Exact destination address:\n $exdest',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Preferred Vehicle: $vehicle \nExpected price per head: $charge',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'Time of departure: ${selectdat.day} ${_getMonth(selectdat.month)} ${selectdat.year}, ${_formatTime(selectdat)}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Text(
+                      addnote == ""
+                          ? 'No additional notes'
+                          : 'Additional notes:\n $addnote',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      // Show loading indicator
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Row(
+                              children: const [
+                                CircularProgressIndicator(),
+                                SizedBox(width: 16),
+                                Text('Requesting rider...'),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+
+                      try {
+                        Map<String, dynamic>? userMap =
+                            await getUserDetails(uidposter)
+                                as Map<String, dynamic>;
+                        UserModel sellerUser = UserModel.fromMap(userMap);
+                        ChatRoomModel? chatroommodel =
+                            await getChatroomModel(sellerUser);
+                        User? currentUser = FirebaseAuth.instance.currentUser;
+                        UserModel? userModel =
+                            await FirebaseHelper.getUserModelById(
+                                currentUser!.uid);
+
+                        Navigator.pop(context); // Hide loading indicator
+
+                        if (chatroommodel != null) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Chat_Room_Page(
+                              targetUser: sellerUser,
+                              userModel: userModel!,
+                              firabaseUser: currentUser,
+                              chatroom: chatroommodel,
+                            );
+                          }));
+                        }
+                      } catch (e) {
+                        // print('Error contacting the seller: $e');
+                        Fluttertoast.showToast(
+                            msg: "Error contacting the user");
+                        Navigator.pop(context); // Hide loading indicator
+                      }
+                    },
+                    child: const Text('Request to ride together'),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
 }

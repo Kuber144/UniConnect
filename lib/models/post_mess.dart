@@ -56,6 +56,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
+  final String profilepic;
   final String uid;
   final String username;
   final  datePublished;
@@ -67,6 +68,7 @@ class Post {
 
 
   const Post({
+    required this.profilepic,
     required this.uid,
     required this.username,
     required this.datePublished,
@@ -78,6 +80,7 @@ class Post {
   });
 
   Map<String, dynamic> toJson() => {
+    "profilepic": profilepic,
     "username": username,
     "uid": uid,
     "postId":postId,
@@ -100,6 +103,7 @@ class Post {
       email: snapshot['email'],
       hostel: snapshot['hostel'],
       phase: snapshot['phase'],
+      profilepic: snapshot['profilepic'],
     );
   }
 }

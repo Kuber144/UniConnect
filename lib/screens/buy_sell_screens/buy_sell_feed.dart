@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uniconnect/screens/lnf_screens/lnfUploadScreen.dart';
-import 'package:uniconnect/screens/lnf_screens/lnf_post_card.dart';
-import 'package:uniconnect/util/colors.dart';
 import '../../main.dart';
+import '../../util/colors.dart';
+import 'buy_sell_post_card.dart';
 
-class FoundItemsScreen extends StatefulWidget {
-  const FoundItemsScreen({Key? key}) : super(key: key);
+class FeedScreen extends StatefulWidget {
+  const FeedScreen({Key? key}) : super(key: key);
 
   @override
-  FoundItemsScreenState createState() => FoundItemsScreenState();
+  FeedScreenState createState() => FeedScreenState();
 }
 
-class FoundItemsScreenState extends State<FoundItemsScreen> {
+class FeedScreenState extends State<FeedScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   List<QueryDocumentSnapshot<Map<String, dynamic>>> filteredDocs = [];
 
@@ -22,34 +21,6 @@ class FoundItemsScreenState extends State<FoundItemsScreen> {
     final User? user = FirebaseAuth.instance.currentUser;
     final String currentUserId = user?.uid ?? '';
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        tooltip: "Post for Found Item ",
-        onPressed: () {
-          Navigator.push(
-              context,
-              PageRouteBuilder(
-                  transitionDuration: const Duration(milliseconds: 150),
-                  transitionsBuilder: (BuildContext context,
-                      Animation<double> animation,
-                      Animation<double> secAnimation,
-                      Widget child) {
-                    return ScaleTransition(
-                      alignment: Alignment.bottomRight,
-                      scale: animation,
-                      child: child,
-                    );
-                  },
-                  pageBuilder: (BuildContext context,
-                      Animation<double> animation,
-                      Animation<double> secAnimation) {
-                    return const lnfUploadScreen(
-                      type: "Found",
-                    );
-                  }));
-        },
-        backgroundColor: iconcolor,
-        child: const Icon(Icons.add),
-      ),
       body: Stack(
         children: [
           Image.asset(
@@ -69,7 +40,7 @@ class FoundItemsScreenState extends State<FoundItemsScreen> {
                     setState(() {});
                   },
                   decoration: InputDecoration(
-                    hintText: 'Search by item name',
+                    hintText: 'Search by product name',
                     hintStyle: const TextStyle(color: Colors.black),
                     prefixIcon: const Icon(
                       Icons.search,
@@ -86,7 +57,7 @@ class FoundItemsScreenState extends State<FoundItemsScreen> {
               Expanded(
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
-                      .collection('LnFPosts')
+                      .collection('buy_sell_posts')
                       .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
@@ -98,14 +69,11 @@ class FoundItemsScreenState extends State<FoundItemsScreen> {
                     }
                     final filteredDocs = _searchTextController.text.isEmpty
                         ? snapshot.data!.docs
-                            .where((doc) =>
-                                doc['uid'] != currentUserId &&
-                                doc['postType'] == "Found")
+                            .where((doc) => doc['uid'] != currentUserId)
                             .toList()
                         : snapshot.data!.docs
                             .where((doc) =>
                                 doc['uid'] != currentUserId &&
-                                doc['postType'] == "Found" &&
                                 doc['pdtName']
                                     .toString()
                                     .toLowerCase()
@@ -125,7 +93,7 @@ class FoundItemsScreenState extends State<FoundItemsScreen> {
                         itemCount: filteredDocs.length,
                         itemBuilder: (context, index) => Column(
                           children: [
-                            lnfPostCard(
+                            BuySellPostCard(
                               snap: filteredDocs[index].data(),
                               hello: uuid.v4(),
                             ),

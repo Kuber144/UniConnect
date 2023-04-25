@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/widgets/hero_dialog_route.dart';
+
+import '../screens/profile_screens/user_profile_page.dart';
 class PostCard extends StatefulWidget {
   final Map<String, dynamic> snap;
 
@@ -31,23 +33,59 @@ class _PostCardState extends State<PostCard> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 10,top: 10),
-                  child: Row(
-                    children: [
-                  Text(
-                    widget.snap["username"],
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+              //           '${(widget.snap['datePublished'] as Timestamp).toDate().day} ${_getMonth((widget.snap['datePublished'] as Timestamp).toDate().month)} ${(widget.snap['datePublished'] as Timestamp).toDate().year}, ${_formatTime((widget.snap['datePublished'] as Timestamp).toDate())}',
+              //           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              //         ),
+              // ],
+              //     ),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => User_Profile_Page(uid: widget.snap['uid']!,),
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 22,
+                            backgroundImage: NetworkImage(
+                                widget.snap['profilepic'] ?? ''),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => User_Profile_Page(uid: widget.snap['uid']!,),
+                                  ),
+                                );
+                              },
+                              child:  Text(
+                                widget.snap['username'] ?? '',
+                                style: const TextStyle(
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${(widget.snap['datePublished'] as Timestamp).toDate().day} ${_getMonth((widget.snap['datePublished'] as Timestamp).toDate().month)} ${(widget.snap['datePublished'] as Timestamp).toDate().year}, ${_formatTime((widget.snap['datePublished'] as Timestamp).toDate())}',
+                              style: const TextStyle(fontSize: 12, color: mobileSearchColor),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                      const SizedBox(width: 10,),
-                      Text(
-                        '${(widget.snap['datePublished'] as Timestamp).toDate().day} ${_getMonth((widget.snap['datePublished'] as Timestamp).toDate().month)} ${(widget.snap['datePublished'] as Timestamp).toDate().year}, ${_formatTime((widget.snap['datePublished'] as Timestamp).toDate())}',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                      ),
-              ],
-                  ),
                   ),
                   Padding(
                     padding: EdgeInsets.all(10),
@@ -60,20 +98,6 @@ class _PostCardState extends State<PostCard> {
                     textAlign: TextAlign.start,
                   ),
                   ),
-                  // Text(
-                  //   'Time of departure: ${selectdat.day} ${_getMonth(selectdat.month)} ${selectdat.year}, ${_formatTime(selectdat)}',
-                  //   style: const TextStyle(fontWeight: FontWeight.bold),
-                  // ),
-                  // const SizedBox(height: 10,),
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: 30),
-                  //   child: Text(
-                  //     addnote == "" ? 'No additional notes' : 'Additional notes:\n $addnote',
-                  //     style: TextStyle(fontWeight: FontWeight.bold),
-                  //     textAlign: TextAlign.center,
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 30,),
                 ],
               ),
             ),

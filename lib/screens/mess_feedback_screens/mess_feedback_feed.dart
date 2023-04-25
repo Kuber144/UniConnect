@@ -1,8 +1,8 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uniconnect/screens/carpool_screens/carpool_My_Requests.dart';
 import 'package:uniconnect/models/post_card_mess.dart';
 import 'package:uniconnect/util/colors.dart';
@@ -12,36 +12,71 @@ import '../../main.dart';
 import '../../resources/firestore_methods_mess.dart';
 import 'mess_feedback_my_comments.dart';
 
-
 class Mess_Feed extends StatefulWidget {
   const Mess_Feed({Key? key}) : super(key: key);
 
   @override
   _MessFeedState createState() => _MessFeedState();
-
 }
 
-
 class _MessFeedState extends State<Mess_Feed> {
+  String name = '';
+  String email = '';
+  String hostel = " ";
+  String userid = " ";
+  String profilepic = " ";
+  String bh1_4 = "", bh2_3 = "", bh5 = "", gh1_2_3 = "";
 
-  String name='';
-  String email='';
-  String hostel=" ";
-  String userid=" ";
-
+  Future<void> getAllpics() async {
+    try {
+      DocumentReference documentRef1 =
+          FirebaseFirestore.instance.collection('mess_menu').doc('bh1_4');
+      DocumentReference documentRef2 =
+          FirebaseFirestore.instance.collection('mess_menu').doc('bh2_3');
+      DocumentReference documentRef3 =
+          FirebaseFirestore.instance.collection('mess_menu').doc('bh5');
+      DocumentReference documentRef4 =
+          FirebaseFirestore.instance.collection('mess_menu').doc('gh1_2_3');
+      DocumentSnapshot documentSnapshot1 = await documentRef1.get();
+      DocumentSnapshot documentSnapshot2 = await documentRef2.get();
+      DocumentSnapshot documentSnapshot3 = await documentRef3.get();
+      DocumentSnapshot documentSnapshot4 = await documentRef4.get();
+      if (documentSnapshot1.exists &&
+          documentSnapshot2.exists &&
+          documentSnapshot3.exists) {
+        bh1_4 = documentSnapshot1['url'].toString();
+        bh2_3 = documentSnapshot2['url'].toString();
+        bh5 = documentSnapshot3['url'].toString();
+        gh1_2_3 = documentSnapshot4['url'].toString();
+        setState(() {
+          bh1_4;
+          bh2_3;
+          gh1_2_3;
+          bh5;
+        });
+      } else {
+        print('One or more documents do not exist');
+      }
+    } catch (error) {
+      Fluttertoast.showToast(msg: "Error in loading images: $error");
+    }
+  }
 
   Future<void> getUserDetails() async {
-    String uid= FirebaseAuth.instance.currentUser!.uid;
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    if(userSnapshot.exists){
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    if (userSnapshot.exists) {
       setState(() {
-        userid=userSnapshot['uid'];
-        name= userSnapshot['username'];
-        email=userSnapshot['email'];
-        hostel=userSnapshot['hostel'];
+        userid = userSnapshot['uid'];
+        name = userSnapshot['username'];
+        email = userSnapshot['email'];
+        hostel = userSnapshot['hostel'];
+        profilepic = userSnapshot['profilepic'];
       });
     }
   }
+
   String currentPhase() {
     DateTime now = DateTime.now();
     int hour = now.hour;
@@ -53,18 +88,15 @@ class _MessFeedState extends State<Mess_Feed> {
       return "Dinner";
   }
 
+  TextEditingController commentController = TextEditingController();
+  String phase = "";
 
-  TextEditingController commentController= TextEditingController();
-  String phase="";
-  bool checkComment()
-  {
-    if(commentController.text.isEmpty)
-      {
-        showSnackBar("Comment cannot be empty", context);
-        return false;
-      }
-    if(commentController.text.length>300)
-    {
+  bool checkComment() {
+    if (commentController.text.isEmpty) {
+      showSnackBar("Comment cannot be empty", context);
+      return false;
+    }
+    if (commentController.text.length > 300) {
       showSnackBar("Max comment length is 300", context);
       return false;
     }
@@ -74,25 +106,24 @@ class _MessFeedState extends State<Mess_Feed> {
   @override
   void initState() {
     super.initState();
-    phase=currentPhase();
+    phase = currentPhase();
     getUserDetails();
+    getAllpics();
   }
+
   void uploadPost(
-      String uid,
-      ) async {
-    setState(() {
-    });
+    String uid,
+  ) async {
     try {
-      print(userid);
-      String res = await FirestoreMethods().uploadPost(userid,name,email,commentController.text,hostel,phase);
+      print(profilepic);
+      String res = await FirestoreMethods().uploadPost(userid, name, email,
+          commentController.text, hostel, phase, profilepic);
       if (res == "success") {
-        setState(() {
-        });
+        setState(() {});
         commentController.clear();
         showSnackBar("Uploaded", context);
       } else {
-        setState(() {
-        });
+        setState(() {});
         showSnackBar(res, context);
       }
     } catch (e) {
@@ -100,16 +131,15 @@ class _MessFeedState extends State<Mess_Feed> {
     }
   }
 
-  bool checkHostel(String hostelus)
-  {
-    if((hostel=="BH-1" || hostel=="BH-4") && (hostelus=="BH-1" || hostelus=="BH-4"))
+  bool checkHostel(String hostelus) {
+    if ((hostel == "BH-1" || hostel == "BH-4") &&
+        (hostelus == "BH-1" || hostelus == "BH-4")) return true;
+    if ((hostel == "BH-2" || hostel == "BH-3") &&
+        (hostelus == "BH-2" || hostelus == "BH-3")) return true;
+    if ((hostel == "GH-1" || hostel == "GH-2" || hostel == "GH-3") &&
+        (hostelus == "GH-1" || hostelus == "GH-2" || hostelus == "GH-3"))
       return true;
-    if((hostel=="BH-2" || hostel=="BH-3") && (hostelus=="BH-2" || hostelus=="BH-3"))
-      return true;
-    if((hostel=="GH-1" || hostel=="GH-2" || hostel=="GH-3") && (hostelus=="GH-1" || hostelus=="GH-2" ||hostelus=="GH-3"))
-      return true;
-    if((hostel=="BH-5") && (hostelus=="BH-5"))
-      return true;
+    if ((hostel == "BH-5") && (hostelus == "BH-5")) return true;
     return false;
   }
 
@@ -120,17 +150,14 @@ class _MessFeedState extends State<Mess_Feed> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
-        title: const Text(
-            "Mess Feedback"
-        ),
+        title: const Text("Mess Feedback"),
         actions: [
           _buildPopupMenuButton(context),
         ],
       ),
       body: Column(
         children: [
-
-    Container(
+          Container(
             child: Stack(
               children: [
                 GestureDetector(
@@ -144,19 +171,32 @@ class _MessFeedState extends State<Mess_Feed> {
                         children: [
                           Image.network(
                             (hostel == "BH-1" || hostel == "BH-4")
-                                ? 'https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/mess%2Fmess_bh1_bh4.jpg?alt=media&token=5ae8103b-763b-4244-b583-9c74673f50c1'
+                                ? bh1_4
                                 : (hostel == "BH-3" || hostel == "BH-2")
-                                ? 'https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/mess%2Fmess_bh2_bh3.jpg?alt=media&token=473f17c3-3bb2-42fc-a113-fe258c1e2c3c'
-                                : (hostel == "BH-5")
-                                ? 'https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/mess%2Fmess_bh5.jpg?alt=media&token=b45fb5a8-1530-4d80-b736-521fc967fcaf'
-                                : 'https://firebasestorage.googleapis.com/v0/b/uniconnect-62628.appspot.com/o/mess%2Fmess_gh.jpg?alt=media&token=cfbab27c-dbde-4a2d-bd7a-d7dd3ef74756',
+                                    ? bh2_3
+                                    : (hostel == "BH-5")
+                                        ? bh5
+                                        : gh1_2_3,
                             fit: BoxFit.contain,
-                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
                               if (loadingProgress == null) return child;
                               return Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes! : null,
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
                                 ),
+                              );
+                            },
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              return Image.asset(
+                                'assets/loading.gif',
+                                // replace with your default image file path
+                                fit: BoxFit.contain,
                               );
                             },
                           ),
@@ -166,26 +206,29 @@ class _MessFeedState extends State<Mess_Feed> {
                   ),
                 ),
                 Container(
-                    color: Colors.transparent,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10,),
-
-                      child: Text(
-                        (hostel == "BH-1" || hostel == "BH-4")
-                            ? 'BH-1 / BH-4'
-                            : (hostel == "BH-3" || hostel == "BH-2")
-                            ? 'BH-3 / BH-2'
-                            : (hostel == "BH-5") ? 'BH-5' : 'GH-1 / GH-2 / GH-3',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
+                  color: Colors.transparent,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10,
+                    ),
+                    child: Text(
+                      (hostel == "BH-1" || hostel == "BH-4")
+                          ? 'BH-1 / BH-4'
+                          : (hostel == "BH-3" || hostel == "BH-2")
+                              ? 'BH-3 / BH-2'
+                              : (hostel == "BH-5")
+                                  ? 'BH-5'
+                                  : 'GH-1 / GH-2 / GH-3',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-      ],
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -209,14 +252,19 @@ class _MessFeedState extends State<Mess_Feed> {
                   ),
                 ),
                 StreamBuilder(
-                  stream: FirebaseFirestore.instance.collection('mess').snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                  stream:
+                      FirebaseFirestore.instance.collection('mess').snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
-                    final filteredDocsLate = snapshot.data!.docs.where((doc) => doc['phase']!=phase).toList();
+                    final filteredDocsLate = snapshot.data!.docs
+                        .where((doc) => doc['phase'] != phase)
+                        .toList();
                     if (filteredDocsLate.isNotEmpty) {
                       for (final doc in filteredDocsLate) {
                         doc.reference.delete().then((value) {
@@ -228,7 +276,8 @@ class _MessFeedState extends State<Mess_Feed> {
                     }
                     final filteredDocs = snapshot.data!.docs.where((doc) {
                       // Check if the uid is not equal to currentUserId and the document is active
-                      return  doc['phase']==phase && checkHostel(doc['hostel']);
+                      return doc['phase'] == phase &&
+                          checkHostel(doc['hostel']);
                     }).toList();
 
                     if (filteredDocs.isEmpty) {
@@ -238,16 +287,19 @@ class _MessFeedState extends State<Mess_Feed> {
                     }
                     return Padding(
                       // width: MediaQuery.of(context).size.width*0.7,
-                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 25),
                       child: ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         itemCount: filteredDocs.length,
-                        itemBuilder: (context,index)=> Column(
+                        itemBuilder: (context, index) => Column(
                           children: [
                             PostCard(
                               snap: filteredDocs[index].data() ?? {},
                             ),
-                            const SizedBox(height: 13,),
+                            const SizedBox(
+                              height: 13,
+                            ),
                           ],
                         ),
                       ),
@@ -257,42 +309,42 @@ class _MessFeedState extends State<Mess_Feed> {
               ],
             ),
           ),
-         Container(
-           color: cardcolor,
-    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    child: Row(
-    children: [
-    Expanded(
-    child: TextField(
-      controller: commentController,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(300),
-      ],
-    decoration: InputDecoration(
-    hintText: 'Add a comment for ',
-    border: OutlineInputBorder(),
-    ),
-    ),
-    ),
-    SizedBox(width: 10),
-    ElevatedButton(
-    onPressed: () {
-      if(checkComment())
-        {
-          uploadPost(
-            userid,
-          );
-        }
-    },
-    child: Text('Submit'),
-    ),
-    ],
-    ),
-         ) ,
+          Container(
+            color: cardcolor,
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: commentController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(300),
+                    ],
+                    decoration: InputDecoration(
+                      hintText: 'Add a comment for ',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    if (checkComment()) {
+                      uploadPost(
+                        userid,
+                      );
+                    }
+                  },
+                  child: Text('Submit'),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
+
   Widget _buildPopupMenuButton(BuildContext context) {
     return PopupMenuButton<String>(
       onSelected: (String result) {
@@ -310,7 +362,4 @@ class _MessFeedState extends State<Mess_Feed> {
       ],
     );
   }
-
-
-
 }

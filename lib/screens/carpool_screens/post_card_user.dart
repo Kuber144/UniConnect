@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:uniconnect/util/colors.dart';
-import 'package:uniconnect/util/utils.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/widgets/hero_dialog_route.dart';
 
@@ -10,13 +9,15 @@ class PostCard extends StatefulWidget {
   final Map<String, dynamic> snap;
 
   final String hello;
-  const PostCard({Key? key, required this.snap, required this.hello}) : super(key: key);
+
+  const PostCard({Key? key, required this.snap, required this.hello})
+      : super(key: key);
 
   @override
-  _PostCardState createState() => _PostCardState();
+  PostCardState createState() => PostCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class PostCardState extends State<PostCard> {
   String getHello() {
     return widget.hello;
   }
@@ -25,20 +26,23 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-          return _AddPopupCard(
-            key: UniqueKey(),
-            hello: getHello(),
-            start: widget.snap['start'],
-            destination: widget.snap['destination'],
-            charge: widget.snap['expectedPerHeadCharge'],
-            vehicle: widget.snap['vehicle'],
-            exstart: widget.snap['exacstart'],
-            exdest: widget.snap['exacdest'],
-            addnote: widget.snap['addnote'],
-            selectdat: (widget.snap['timeOfDeparture'] as Timestamp).toDate(),
-          );
-        }, settings: const RouteSettings(name: "add_popup_card")));
+        Navigator.of(context).push(HeroDialogRoute(
+            builder: (context) {
+              return _AddPopupCard(
+                key: UniqueKey(),
+                hello: getHello(),
+                start: widget.snap['start'],
+                destination: widget.snap['destination'],
+                charge: widget.snap['expectedPerHeadCharge'],
+                vehicle: widget.snap['vehicle'],
+                exstart: widget.snap['exacstart'],
+                exdest: widget.snap['exacdest'],
+                addnote: widget.snap['addnote'],
+                selectdat:
+                    (widget.snap['timeOfDeparture'] as Timestamp).toDate(),
+              );
+            },
+            settings: const RouteSettings(name: "add_popup_card")));
       },
       child: Hero(
         tag: widget.hello,
@@ -57,7 +61,8 @@ class _PostCardState extends State<PostCard> {
               Stack(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 16),
                     child: Row(
                       children: [
                         const SizedBox(width: 8),
@@ -79,56 +84,6 @@ class _PostCardState extends State<PostCard> {
                       ],
                     ),
                   ),
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    child: IconButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => Dialog(
-                            child: ListView(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16,
-                              ),
-                              shrinkWrap: true,
-                              children: [
-                                'Delete',
-                              ]
-                                  .map(
-                                    (e) => InkWell(
-                                      onTap: () {
-                                        FirebaseFirestore.instance
-                                            .collection('posts')
-                                            .doc(widget.snap['postId'])
-                                            .delete()
-                                            .then((_) {
-                                          Navigator.of(context).pop();
-                                          showSnackBar("Post Deleted", context);
-                                        })
-                                            .catchError((onError) {
-                                          Navigator.of(context).pop();
-                                          showSnackBar("Error in deleting: $onError", context);
-                                        });
-                                      },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                      horizontal: 16,
-                                    ),
-                                    child: Text(e),
-                                  ),
-                                ),
-                              )
-                                  .toList(),
-                            ),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.more_vert),
-                    ),
-                  ),
                 ],
               ),
               Card(
@@ -147,7 +102,7 @@ class _PostCardState extends State<PostCard> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left:28.0,top: 15),
+                            padding: const EdgeInsets.only(left: 28.0, top: 15),
                             child: Text(
                               '${widget.snap['start']} \u27A4 ${widget.snap['destination']}',
                               style: const TextStyle(
@@ -158,23 +113,26 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 30,bottom: 20),
+                          padding: const EdgeInsets.only(right: 30, bottom: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 '${widget.snap['vehicle'] ?? ''}',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 '${widget.snap['expectedPerHeadCharge'] ?? ''}',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 '${(widget.snap['timeOfDeparture'] as Timestamp).toDate().day} ${_getMonth((widget.snap['timeOfDeparture'] as Timestamp).toDate().month)} ${(widget.snap['timeOfDeparture'] as Timestamp).toDate().year}, ${_formatTime((widget.snap['timeOfDeparture'] as Timestamp).toDate())}',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -190,8 +148,8 @@ class _PostCardState extends State<PostCard> {
       ),
     );
   }
-
 }
+
 String _getMonth(int month) {
   switch (month) {
     case 1:
@@ -229,12 +187,26 @@ String _formatTime(DateTime dateTime) {
   final period = dateTime.hour < 12 ? 'am' : 'pm';
   return '$hour:$minute $period';
 }
+
 class _AddPopupCard extends StatelessWidget {
   /// {@macro add_todo_popup_card}
   final String hello;
-  final String start,destination,charge,vehicle,exstart,exdest,addnote;
+  final String start, destination, charge, vehicle, exstart, exdest, addnote;
   final DateTime selectdat;
-  const _AddPopupCard({Key? key,required this.hello, required this.start, required this.destination, required this.charge, required this.vehicle, required this.exstart, required this.exdest, required this.addnote, required this.selectdat}) : super(key: key);
+
+  const _AddPopupCard(
+      {Key? key,
+      required this.hello,
+      required this.start,
+      required this.destination,
+      required this.charge,
+      required this.vehicle,
+      required this.exstart,
+      required this.exdest,
+      required this.addnote,
+      required this.selectdat})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -249,14 +221,16 @@ class _AddPopupCard extends StatelessWidget {
             color: cardcolor,
             elevation: 2,
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 40,),
+                  const SizedBox(
+                    height: 40,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children:[
+                    children: [
                       Text(
                         '$start \u27A4 $destination',
                         style: const TextStyle(
@@ -266,7 +240,9 @@ class _AddPopupCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20,),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
@@ -278,7 +254,9 @@ class _AddPopupCard extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
@@ -290,10 +268,12 @@ class _AddPopupCard extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children:[
+                    children: [
                       Text(
                         'Preferred Vehicle: $vehicle \nExpected price per head: $charge',
                         style: const TextStyle(
@@ -308,16 +288,22 @@ class _AddPopupCard extends StatelessWidget {
                     'Time of departure: ${selectdat.day} ${_getMonth(selectdat.month)} ${selectdat.year}, ${_formatTime(selectdat)}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
-                      addnote == "" ? 'No additional notes' : 'Additional notes:\n $addnote',
+                      addnote == ""
+                          ? 'No additional notes'
+                          : 'Additional notes:\n $addnote',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 30,),
+                  const SizedBox(
+                    height: 30,
+                  ),
                 ],
               ),
             ),
@@ -326,5 +312,4 @@ class _AddPopupCard extends StatelessWidget {
       ),
     );
   }
-
 }

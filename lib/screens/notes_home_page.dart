@@ -88,7 +88,7 @@ class _notesFeedScreenState extends State<notesFeedScreen> {
                     padding: EdgeInsets.all(8.0),
                     child: InkWell(
                       onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PdfViewerScreen(pdfUrl: pdfData[index]['pdfUrl'])));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PdfViewerScreen(pdfUrl: pdfData[index]['pdfUrl'],pdfName: pdfData[index]['name'],)));
                       },
                       child: Container(
                         decoration: BoxDecoration(

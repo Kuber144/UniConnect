@@ -64,14 +64,13 @@ class FirestoreMethods {
       String comment,
       String hostel,
       String phase,
-
+      String profilepic,
       ) async {
     String res = "some error occurred";
     try {
       String postId = const Uuid().v1();
-      print(postId);
-      print(uid);
       Post post = Post(
+        profilepic: profilepic,
         datePublished: DateTime.now(),
         uid: uid,
         username: username,

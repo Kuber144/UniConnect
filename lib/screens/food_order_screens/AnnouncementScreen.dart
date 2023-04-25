@@ -7,7 +7,6 @@ import '../../main.dart';
 import '../../models/post_card_food.dart';
 import '../../util/colors.dart';
 
-
 class AnnouncementScreen extends StatelessWidget {
   const AnnouncementScreen({Key? key}) : super(key: key);
 
@@ -18,27 +17,30 @@ class AnnouncementScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
-        title: const Text(
-            "Offer Announcements"
-        ),
+        title: const Text("Offer Announcements"),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Post an Offer Announcement",
         onPressed: () {
-          Navigator.push(context,
+          Navigator.push(
+              context,
               PageRouteBuilder(
                   transitionDuration: const Duration(milliseconds: 150),
-                  transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation, Widget child){
+                  transitionsBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secAnimation,
+                      Widget child) {
                     return ScaleTransition(
                       alignment: Alignment.bottomRight,
                       scale: animation,
                       child: child,
                     );
                   },
-                  pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secAnimation){
+                  pageBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secAnimation) {
                     return const upload_Announcement();
-                  }
-              ));
+                  }));
         },
         backgroundColor: iconcolor,
         child: const Icon(Icons.add),
@@ -52,8 +54,11 @@ class AnnouncementScreen extends StatelessWidget {
             height: double.infinity,
           ),
           StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('Offer Announcement Posts').snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            stream: FirebaseFirestore.instance
+                .collection('Offer Announcement Posts')
+                .snapshots(),
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),
@@ -61,10 +66,17 @@ class AnnouncementScreen extends StatelessWidget {
               }
               final Timestamp currentTime = Timestamp.now();
               final Duration duration = Duration(days: 15);
-              final filteredDocsLate = snapshot.data!.docs.where((doc) =>
-              doc['datePublished'] is Timestamp &&
-                  currentTime.toDate().difference(doc['datePublished'].toDate()).compareTo(duration) > 0,
-              ).toList();
+              final filteredDocsLate = snapshot.data!.docs
+                  .where(
+                    (doc) =>
+                        doc['datePublished'] is Timestamp &&
+                        currentTime
+                                .toDate()
+                                .difference(doc['datePublished'].toDate())
+                                .compareTo(duration) >
+                            0,
+                  )
+                  .toList();
               if (filteredDocsLate.isNotEmpty) {
                 for (final doc in filteredDocsLate) {
                   doc.reference.delete().then((value) {
@@ -82,16 +94,19 @@ class AnnouncementScreen extends StatelessWidget {
               }
               return Padding(
                 // width: MediaQuery.of(context).size.width*0.7,
-                padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   itemCount: filteredDocs.length,
-                  itemBuilder: (context,index)=> Column(
+                  itemBuilder: (context, index) => Column(
                     children: [
                       PostCard(
                         snap: filteredDocs[index].data() ?? {},
                       ),
-                      const SizedBox(height: 13,),
+                      const SizedBox(
+                        height: 13,
+                      ),
                     ],
                   ),
                 ),

@@ -1,28 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/widgets/hero_dialog_route.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'lnfInnerPostCard.dart';
+import 'buy_sell_post_innerCard.dart';
 
-class lnfPostCard extends StatefulWidget {
+class BuySellPostCard extends StatefulWidget {
   final Map<String, dynamic> snap;
 
   final String hello;
 
-  const lnfPostCard({Key? key, required this.snap, required this.hello})
+  const BuySellPostCard({Key? key, required this.snap, required this.hello})
       : super(key: key);
 
   @override
-  _lnfPostCardState createState() => _lnfPostCardState();
+  _BuySellPostCardState createState() => _BuySellPostCardState();
 }
 
-class _lnfPostCardState extends State<lnfPostCard> {
+class _BuySellPostCardState extends State<BuySellPostCard> {
   String name = "name";
   String email = "email";
-
   String imageUrl = "assets/loading.gif";
+
+  // late String imageUrl;
   final storage = firebase_storage.FirebaseStorage.instance;
 
   @override
@@ -39,7 +39,7 @@ class _lnfPostCardState extends State<lnfPostCard> {
   List<String>? getPic() {
     List<dynamic> dynamicList = widget.snap['pic'];
     List<String>? stringList =
-        dynamicList?.map((item) => item.toString())?.toList();
+        dynamicList.map((item) => item.toString()).toList();
     return stringList;
   }
 
@@ -67,7 +67,7 @@ class _lnfPostCardState extends State<lnfPostCard> {
               List<dynamic> dynamicList = widget.snap['pic'];
               List<String> stringList =
                   dynamicList.map((e) => e.toString()).toList();
-              return lnfInnerPostCard(
+              return AddPopupCard(
                 key: UniqueKey(),
                 hello: getHello(),
                 snap: widget.snap,
@@ -75,6 +75,7 @@ class _lnfPostCardState extends State<lnfPostCard> {
                 pdtDesc: widget.snap['pdtDesc'],
                 pdtName: widget.snap['pdtName'],
                 email: email,
+                sellingPrice: widget.snap['sellingPrice'],
                 images: stringList,
                 uid: widget.snap['uid'],
               );
@@ -102,6 +103,14 @@ class _lnfPostCardState extends State<lnfPostCard> {
                     const SizedBox(width: 8),
                     Row(
                       children: [
+                        // SizedBox(
+                        //   width: 100,
+                        //   height: 100,
+                        //   child: Image(
+                        //     image: NetworkImage(imageUrl),
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        // ),
                         SizedBox(
                           width: 100,
                           height: 100,
@@ -125,7 +134,7 @@ class _lnfPostCardState extends State<lnfPostCard> {
                             },
                           ),
                         ),
-                        SizedBox(width: 19),
+                        const SizedBox(width: 19),
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,22 +145,28 @@ class _lnfPostCardState extends State<lnfPostCard> {
                                       "..."
                                   : widget.snap['pdtName'] ?? '',
                               style: const TextStyle(
+                                color: Colors.black,
                                 fontSize: 19,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
                             Text(
                               widget.snap['pdtDesc']?.length > 29
                                   ? widget.snap['pdtDesc']?.substring(0, 25) +
                                       "..."
                                   : widget.snap['pdtDesc'] ?? '',
                               style: const TextStyle(
-                                  fontSize: 12, color: mobileSearchColor),
+                                  fontSize: 12, color: Colors.black),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            SizedBox(height: 9),
+                            const SizedBox(height: 9),
+                            Text(
+                              "Rs. ${widget.snap['sellingPrice']}",
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.black),
+                            ),
                           ],
                         ),
                       ],
