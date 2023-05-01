@@ -255,8 +255,8 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
                       },
                       child: Text(
                         widget.snap['postType'] == 'Found'
-                            ? 'Found by ${widget.snap['pdtName']}'
-                            : 'Owned by ${widget.snap['pdtName']}',
+                            ? 'Found by $username'
+                            : 'Owned by $username',
                         style: const TextStyle(
                           fontSize: 15,
                         ),

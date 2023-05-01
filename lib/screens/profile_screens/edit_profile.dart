@@ -133,7 +133,7 @@ class _EditProfileState extends State<EditProfile> {
                       try {
                         await currentUser.unlink("phone");
                       } catch (e) {
-                        print(e.toString());
+                        // print(e.toString());
                       }
                       try {
                         await currentUser.linkWithCredential(credential);
@@ -196,9 +196,10 @@ class _EditProfileState extends State<EditProfile> {
               const SizedBox(
                 height: 40,
               ),
-              buildTextField("Username: ", "Username", _nameController, false),
-              buildTextField("About me: ", "Bio", _bioController, false),
               buildTextField(
+                  "Username: ", "Username", _nameController, false, 20),
+              buildTextField("About me: ", "Bio", _bioController, false, 100),
+              buildTextField2(
                   "Contact: ", "+91-6969696969", _phoneController, true),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +298,7 @@ class _EditProfileState extends State<EditProfile> {
               const SizedBox(
                 height: 10,
               ),
-              buildTextField(
+              buildTextField2(
                   "Graduation Year: ", "20XX", _gradyearController, true),
               const SizedBox(
                 height: 30,
@@ -369,6 +370,41 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget buildTextField(String labelText, String placeholder,
+      TextEditingController controller, bool isOnlyDigit, int maxLength) {
+    final intFormatter = FilteringTextInputFormatter.digitsOnly;
+    final textFormatter = FilteringTextInputFormatter.allow(RegExp(r'.*'));
+    TextInputFormatter? formatter;
+
+    if (isOnlyDigit) {
+      formatter = intFormatter;
+    } else {
+      formatter = textFormatter;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: TextField(
+        maxLength: maxLength,
+        maxLines: null,
+        keyboardType: isOnlyDigit ? TextInputType.number : TextInputType.text,
+        controller: controller,
+        inputFormatters: [formatter],
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.only(bottom: 5),
+          labelText: labelText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: placeholder,
+          hintStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildTextField2(String labelText, String placeholder,
       TextEditingController controller, bool isOnlyDigit) {
     final _intFormatter = FilteringTextInputFormatter.digitsOnly;
     final _textFormatter = FilteringTextInputFormatter.allow(RegExp(r'.*'));
@@ -385,7 +421,7 @@ class _EditProfileState extends State<EditProfile> {
         maxLines: null,
         keyboardType: isOnlyDigit ? TextInputType.number : TextInputType.text,
         controller: controller,
-        inputFormatters: [_formatter!],
+        inputFormatters: [_formatter],
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(bottom: 5),
             labelText: labelText,
@@ -428,8 +464,8 @@ class _EditProfileState extends State<EditProfile> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text(
+            title: const Text('Error'),
+            content: const Text(
                 'A user with the username already exists, please choose another username.'),
             actions: <Widget>[
               TextButton(
@@ -499,8 +535,8 @@ class _EditProfileState extends State<EditProfile> {
       Fluttertoast.showToast(msg: "Details Updated Successfully!");
     } catch (e) {
       Fluttertoast.showToast(msg: "Failed to Update Details!");
-      print("efrgwfebn");
-      print(e);
+      // print("efrgwfebn");
+      // print(e);
     }
   }
 }

@@ -247,6 +247,7 @@ class NavBar extends StatelessWidget {
               }
             },
           ),
+          Divider(),
           ListTile(
             leading: const Icon(Icons.share),
             title: const Text('Share'),
@@ -291,6 +292,20 @@ class NavBar extends StatelessWidget {
               );
             },
           ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.code),
+            title: Text('Creators'),
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReportBug(),
+                ),
+              );
+            },
+          ),
+          Divider(),
           ListTile(
             title: const Text('Logout'),
             leading: const Icon(Icons.logout),

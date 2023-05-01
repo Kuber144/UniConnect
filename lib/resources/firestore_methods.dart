@@ -6,6 +6,8 @@ import 'package:uniconnect/models/Offer_Announcement_Post.dart';
 import 'package:uniconnect/models/lnfModel.dart';
 import 'package:uuid/uuid.dart';
 
+
+import '../models/orderModel.dart';
 import '../models/post.dart';
 
 class FirestoreMethods {
@@ -177,6 +179,49 @@ class FirestoreMethods {
         post.toJson(),
       );
 
+      res="success";
+    } catch (e) {
+      res=e.toString();
+
+    }
+    return res;
+  }
+
+
+
+  Future<String> uploadPostOrder(
+      String order,
+      String place,
+      String price,
+      DateTime timeOfOrder,
+      String people,
+      String uid,
+      String username,
+      String desc,
+      String addnote,
+      String profilepic
+
+      ) async {
+    String res = "some error occurred";
+    try {
+      String postId = const Uuid().v1();
+      print(postId);
+      print(uid);
+      Order_Post post = Order_Post(
+          order: order,
+        place: place,
+        price: price,
+        people: people,
+        desc: desc,
+        profilepic: profilepic,
+        timeOfOrder: timeOfOrder,
+        uid: uid, username: username, datePublished: DateTime.now(), postId: postId, addnote: addnote,
+
+      );
+
+      FirebaseFirestore.instance.collection('Orderposts').doc(postId).set(
+        post.toJson(),
+      );
       res="success";
     } catch (e) {
       res=e.toString();

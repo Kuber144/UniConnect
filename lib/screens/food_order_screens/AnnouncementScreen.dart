@@ -2,13 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uniconnect/screens/food_order_screens/upload_Announcement.dart';
-
-import '../../main.dart';
 import '../../models/post_card_food.dart';
 import '../../util/colors.dart';
+import 'My_Announce_Food.dart';
 
-class AnnouncementScreen extends StatelessWidget {
+
+class AnnouncementScreen extends StatefulWidget{
   const AnnouncementScreen({Key? key}) : super(key: key);
+
+  @override
+  AnnouncementScreenState createState() => AnnouncementScreenState();
+}
+class AnnouncementScreenState extends State<AnnouncementScreen> {
+  final TextEditingController _searchTextController = TextEditingController();
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> filteredDocs = [];
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +25,9 @@ class AnnouncementScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: const Text("Offer Announcements"),
+        actions: [
+          _buildPopupMenuButton(context),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Post an Offer Announcement",
@@ -53,7 +63,33 @@ class AnnouncementScreen extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
           ),
-          StreamBuilder(
+          Column(
+            children: [
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: TextField(
+                  controller: _searchTextController,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Search by place',
+                    hintStyle: const TextStyle(color: Colors.black),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: iconcolor,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey.withOpacity(0.3),
+                  ),
+                ),
+              ),
+              Expanded(
+              child: StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('Offer Announcement Posts')
                 .snapshots(),
@@ -65,7 +101,7 @@ class AnnouncementScreen extends StatelessWidget {
                 );
               }
               final Timestamp currentTime = Timestamp.now();
-              final Duration duration = Duration(days: 15);
+              const Duration duration = Duration(days: 15);
               final filteredDocsLate = snapshot.data!.docs
                   .where(
                     (doc) =>
@@ -80,13 +116,24 @@ class AnnouncementScreen extends StatelessWidget {
               if (filteredDocsLate.isNotEmpty) {
                 for (final doc in filteredDocsLate) {
                   doc.reference.delete().then((value) {
-                    print('Document ${doc.id} deleted successfully.');
+                    // print('Document ${doc.id} deleted successfully.');
                   }).catchError((error) {
-                    print('Error deleting document ${doc.id}: $error');
+                    // print('Error deleting document ${doc.id}: $error');
                   });
                 }
               }
-              final filteredDocs = snapshot.data!.docs.toList();
+              // final filteredDocs = snapshot.data!.docs.where((doc) => doc['uid'] != currentUserId).toList();
+              final filteredDocs = _searchTextController.text.isEmpty
+                  ? snapshot.data!.docs
+                  .where((doc) => doc['uid'] != currentUserId)
+                  .toList()
+                  : snapshot.data!.docs
+                  .where((doc) =>
+              doc['uid'] != currentUserId &&
+                  (doc['offerPlace'].toString().toLowerCase().contains(
+                      _searchTextController.text
+                          .toLowerCase())))
+                  .toList();
               if (filteredDocs.isEmpty) {
                 return const Center(
                   child: Text('No data'),
@@ -102,7 +149,7 @@ class AnnouncementScreen extends StatelessWidget {
                   itemBuilder: (context, index) => Column(
                     children: [
                       PostCard(
-                        snap: filteredDocs[index].data() ?? {},
+                        snap: filteredDocs[index].data(),
                       ),
                       const SizedBox(
                         height: 13,
@@ -113,8 +160,30 @@ class AnnouncementScreen extends StatelessWidget {
               );
             },
           ),
+              ),
+    ],
+          ),
         ],
       ),
+    );
+  }
+
+
+  Widget _buildPopupMenuButton(BuildContext context) {
+    return PopupMenuButton<String>(
+      onSelected: (String result) {
+        // navigate to MyRequestsScreen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const My_Announce_Food()),
+        );
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        const PopupMenuItem<String>(
+          value: 'my-requests',
+          child: Text('My Announcements'),
+        ),
+      ],
     );
   }
 }

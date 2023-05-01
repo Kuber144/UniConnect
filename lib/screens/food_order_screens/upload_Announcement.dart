@@ -13,19 +13,15 @@ class upload_Announcement extends StatefulWidget {
   @override
   State<upload_Announcement> createState() => _upload_AnnouncementState();
 }
-
 class _upload_AnnouncementState extends State<upload_Announcement> {
   TextEditingController offerDesc = new TextEditingController();
   TextEditingController offerPlace = new TextEditingController();
   TextEditingController offerLink = new TextEditingController();
 
   late DateTime selectedDateTime= DateTime.now();
-  final _dateFormat = DateFormat('d MMMM y, h:mm a', 'en_US');
   String userid="";
   String username="";
   String profilepic="";
-
-
   @override
   void dispose() {
     super.dispose();
@@ -113,35 +109,35 @@ class _upload_AnnouncementState extends State<upload_Announcement> {
         title: const Text('Post Offer Announcement'),
         centerTitle: true,
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/home_bg.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+      body: Container(
+    decoration: const BoxDecoration(
+    image: DecorationImage(
+    image: AssetImage('assets/home_bg.png'),
+    fit: BoxFit.cover,
+    )),
+    child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
               child: Column(
                 children: [
                   const SizedBox(height: 30,),
-                  buildTextField("Offer Place:", "Enter the shop or website providing offer", offerPlace, false),
-                  buildTextField("Offer Link:", "Enter the link of the offer if available (Optional)", offerLink, false),
-                  buildTextField("Offer Description:", "Enter the description of the offer", offerDesc , false),
+                  buildTextField("Offer Place:", "Enter the shop or website providing offer", offerPlace, false,30),
+                  buildTextField("Offer Link:", "Enter the link of the offer if available (Optional)", offerLink, false,20),
+                  buildTextField("Offer Description:", "Enter the description of the offer", offerDesc , false,100),
 
                   ElevatedButton(
-                      onPressed:(){ uploadPost(userid,username,profilepic);},
-                      child: Text("Post",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
+                      onPressed:(){ if(checkdetails())uploadPost(userid,username,profilepic);},
+                      child: const Text("Post",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
                   ),
                   const SizedBox(height: 60,),
                 ],
               ),
             ),
           ),
-        ],
+    ),
+        // ],
       ),
     );
   }
@@ -152,35 +148,36 @@ class _upload_AnnouncementState extends State<upload_Announcement> {
 
 
 
-  Widget buildTextField(String labelText, String placeholder, TextEditingController controller,bool isOnlyDigit) {
-    final _intFormatter = FilteringTextInputFormatter.digitsOnly;
-    final _textFormatter= FilteringTextInputFormatter.allow(RegExp(r'.*'));
-    TextInputFormatter? _formatter;
+  Widget buildTextField(String labelText, String placeholder,
+      TextEditingController controller, bool isOnlyDigit, int maxLength) {
+    final intFormatter = FilteringTextInputFormatter.digitsOnly;
+    final textFormatter = FilteringTextInputFormatter.allow(RegExp(r'.*'));
+    TextInputFormatter? formatter;
 
-    if(isOnlyDigit)
-    {
-      _formatter=_intFormatter;
+    if (isOnlyDigit) {
+      formatter = intFormatter;
+    } else {
+      formatter = textFormatter;
     }
-    else {
-      _formatter=_textFormatter;
-    }
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 10),
       child: TextField(
+        maxLength: maxLength,
         maxLines: null,
         keyboardType: isOnlyDigit ? TextInputType.number : TextInputType.text,
         controller: controller,
-        inputFormatters: [_formatter!],
+        inputFormatters: [formatter],
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.only(bottom: 5),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey
-            )
+          contentPadding: const EdgeInsets.only(bottom: 5),
+          labelText: labelText,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          hintText: placeholder,
+          hintStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
         ),
       ),
     );
@@ -190,13 +187,11 @@ class _upload_AnnouncementState extends State<upload_Announcement> {
     offerDesc.text=offerDesc.text.trim();
     offerPlace.text=offerPlace.text.trim();
     offerLink.text=offerLink.text.trim();
-    if(offerDesc.text.isEmpty || offerPlace.text.isEmpty)
+    if(offerDesc.text.isEmpty || offerPlace.text.isEmpty || offerLink.text.isEmpty)
     {
-      showSnackBar(" offer Description and offer Place cannot be empty", context);
+      showSnackBar("Fields cannot be empty", context);
       return false;
     }
-
-
     return true;
   }
 
