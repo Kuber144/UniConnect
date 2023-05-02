@@ -17,7 +17,7 @@ class _SlideshowState extends State<Slideshow> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 15), (Timer timer) {
+    Timer.periodic(const Duration(seconds: 5), (Timer timer) {
       if (_currentPage < widget.images.length - 1) {
         _currentPage++;
       } else {
@@ -25,7 +25,7 @@ class _SlideshowState extends State<Slideshow> {
       }
       _pageController.animateToPage(
         _currentPage,
-        duration: const Duration(milliseconds: 1500),
+        duration: const Duration(milliseconds: 700),
         curve: Curves.easeIn,
       );
     });

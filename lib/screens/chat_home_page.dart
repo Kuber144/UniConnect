@@ -27,21 +27,7 @@ class _Chat_HomePageState extends State<Chat_HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Your Chats"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Navigator.pop(context);
-
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  return const HomePage();
-                }),
-              );
-            },
-            icon: const Icon(Icons.home),
-          ),
-        ],
+        backgroundColor: Colors.black,
       ),
       body: SafeArea(
         child: Container(

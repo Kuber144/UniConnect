@@ -166,21 +166,6 @@ class _notes_Upload_Post extends State<notes_Upload_Post> {
           ),
           title: const Text('Upload Notes'),
           centerTitle: false,
-          actions: [
-            TextButton(
-              onPressed: () {
-
-              },
-              child: const Text(
-                'Post',
-                style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ],
         ),
         body: Column(
               children: [
