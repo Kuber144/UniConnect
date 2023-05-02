@@ -50,6 +50,8 @@ dependencies:
   file_picker: ^5.2.8
   snippet_coder_utils: ^1.0.13
   easy_pdf_viewer: ^1.0.6
+  dio: ^5.1.1
+  path_provider: ^2.0.14
 
 dev_dependencies:
   flutter_lints: ^2.0.1
