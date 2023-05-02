@@ -4,10 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Buysell_Model {
   final String uid;
-  final  List<String> pic;
-  final String  pdtName;
+  final List<String> pic;
+  final String pdtName;
   final String pdtDesc;
-  final  String sellingPrice;
+  final String sellingPrice;
+
   //final String phno;
   final String postId;
   final datePublished;
@@ -24,16 +25,15 @@ class Buysell_Model {
   });
 
   Map<String, dynamic> toJson() => {
-
-    "uid": uid,
-    "pic":pic,
-    "pdtName":pdtName,
-    "pdtDesc":pdtDesc,
-    "sellingPrice":sellingPrice,
-    //"phno":phno,
-    "postId":postId,
-    "datePublished":datePublished,
-  };
+        "uid": uid,
+        "pic": pic,
+        "pdtName": pdtName,
+        "pdtDesc": pdtDesc,
+        "sellingPrice": sellingPrice,
+        //"phno":phno,
+        "postId": postId,
+        "datePublished": datePublished,
+      };
 
   static Buysell_Model fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;

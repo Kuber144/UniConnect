@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../util/colors.dart';
 
 class User_Profile_Page extends StatefulWidget {
@@ -130,7 +132,13 @@ class _ProfilePageState extends State<User_Profile_Page> {
                 ),
               ),
               const SizedBox(height: 10),
-              Card(
+              GestureDetector(
+                onLongPress: () async {
+                  ClipboardData data = ClipboardData(text: email);
+                  await Clipboard.setData(data);
+                  Fluttertoast.showToast(msg: "Email copied to clipboard");
+                },
+              child: Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
@@ -140,6 +148,7 @@ class _ProfilePageState extends State<User_Profile_Page> {
                       style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: const Text("E-Mail"),
                 ),
+              ),
               ),
               const SizedBox(height: 10),
               Card(
@@ -155,15 +164,28 @@ class _ProfilePageState extends State<User_Profile_Page> {
                 ),
               ),
               const SizedBox(height: 10),
-              Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: ListTile(
-                  leading: const Icon(Icons.contact_page, color: iconcolor),
-                  title: Text(phone,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: const Text("Contact Number"),
+              GestureDetector(
+                onLongPress: () async {
+                  if(phone!="Not selected yet") {
+                    ClipboardData data = ClipboardData(text: phone);
+                    await Clipboard.setData(data);
+                    Fluttertoast.showToast(
+                        msg: "Phone Number copied to clipboard");
+                  }
+                  else
+                    Fluttertoast.showToast(
+                        msg: "User has not given a phone number to copy yet");
+                },
+                child: Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: ListTile(
+                    leading: const Icon(Icons.contact_page, color: iconcolor),
+                    title: Text(phone,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: const Text("Contact Number"),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),

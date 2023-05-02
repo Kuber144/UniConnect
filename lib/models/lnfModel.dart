@@ -4,10 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class lnfModel {
   final String uid;
-  final  List<String> pic;
-  final String  pdtName;
+  final List<String> pic;
+  final String pdtName;
   final String pdtDesc;
   final postType;
+
   //final String phno;
   final String postId;
   final datePublished;
@@ -24,16 +25,15 @@ class lnfModel {
   });
 
   Map<String, dynamic> toJson() => {
-
-    "uid": uid,
-    "pic":pic,
-    "pdtName":pdtName,
-    "pdtDesc":pdtDesc,
-    //"phno":phno,
-    "postId":postId,
-    "postType":postType,
-    "datePublished":datePublished,
-  };
+        "uid": uid,
+        "pic": pic,
+        "pdtName": pdtName,
+        "pdtDesc": pdtDesc,
+        //"phno":phno,
+        "postId": postId,
+        "postType": postType,
+        "datePublished": datePublished,
+      };
 
   static lnfModel fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;

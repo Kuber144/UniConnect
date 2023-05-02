@@ -1,11 +1,8 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/models/Offer_Announcement_Post.dart';
 import 'package:uniconnect/models/lnfModel.dart';
 import 'package:uuid/uuid.dart';
-
 
 import '../models/orderModel.dart';
 import '../models/post.dart';
@@ -15,14 +12,13 @@ class FirestoreMethods {
 
 //Upload FoundPost
   Future<String> uploadLnFPost(
-      String uid,
-      String postType,
-      List<String> pic,
-      String pdtName,
-      String pdtDesc,
-
-      String postId,
-      ) async {
+    String uid,
+    String postType,
+    List<String> pic,
+    String pdtName,
+    String pdtDesc,
+    String postId,
+  ) async {
     String res = "some error occurred";
     try {
       lnfModel post = lnfModel(
@@ -44,7 +40,7 @@ class FirestoreMethods {
           'pdtDesc': post.pdtDesc,
           'datePublished': post.datePublished,
           'postId': post.postId,
-          'postType':post.postType,
+          'postType': post.postType,
         },
       );
 
@@ -54,7 +50,6 @@ class FirestoreMethods {
     }
     return res;
   }
-
 
   //upload lostPost
 
@@ -100,22 +95,14 @@ class FirestoreMethods {
   // }
 
   //upload OfferAnnouncement
-  Future<String> uploadAnnouncementPost(
-      String offerPlace,
-      String offerLink,
-      String offerDesc,
-      String uid,
-      String username,
-      String profilepic
-
-      ) async {
+  Future<String> uploadAnnouncementPost(String offerPlace, String offerLink,
+      String offerDesc, String uid, String username, String profilepic) async {
     String res = "some error occurred";
     try {
       String postId = const Uuid().v1();
       print(postId);
       print(uid);
       Offer_Announcement_Post post = Offer_Announcement_Post(
-
         datePublished: DateTime.now(),
         uid: uid,
         username: username,
@@ -126,18 +113,19 @@ class FirestoreMethods {
         offerLink: offerLink,
       );
 
-      FirebaseFirestore.instance.collection('Offer Announcement Posts').doc(postId).set(
-        post.toJson(),
-      );
+      FirebaseFirestore.instance
+          .collection('Offer Announcement Posts')
+          .doc(postId)
+          .set(
+            post.toJson(),
+          );
 
-      res="success";
+      res = "success";
     } catch (e) {
-      res=e.toString();
-
+      res = e.toString();
     }
     return res;
   }
-
 
   //upload CarpoolPost
   Future<String> uploadPost(
@@ -151,9 +139,7 @@ class FirestoreMethods {
       String exacstart,
       String exacdest,
       String addnote,
-      String profilepic
-
-      ) async {
+      String profilepic) async {
     String res = "some error occurred";
     try {
       String postId = const Uuid().v1();
@@ -176,18 +162,15 @@ class FirestoreMethods {
       );
 
       FirebaseFirestore.instance.collection('posts').doc(postId).set(
-        post.toJson(),
-      );
+            post.toJson(),
+          );
 
-      res="success";
+      res = "success";
     } catch (e) {
-      res=e.toString();
-
+      res = e.toString();
     }
     return res;
   }
-
-
 
   Future<String> uploadPostOrder(
       String order,
@@ -199,33 +182,33 @@ class FirestoreMethods {
       String username,
       String desc,
       String addnote,
-      String profilepic
-
-      ) async {
+      String profilepic) async {
     String res = "some error occurred";
     try {
       String postId = const Uuid().v1();
       print(postId);
       print(uid);
       Order_Post post = Order_Post(
-          order: order,
+        order: order,
         place: place,
         price: price,
         people: people,
         desc: desc,
         profilepic: profilepic,
         timeOfOrder: timeOfOrder,
-        uid: uid, username: username, datePublished: DateTime.now(), postId: postId, addnote: addnote,
-
+        uid: uid,
+        username: username,
+        datePublished: DateTime.now(),
+        postId: postId,
+        addnote: addnote,
       );
 
       FirebaseFirestore.instance.collection('Orderposts').doc(postId).set(
-        post.toJson(),
-      );
-      res="success";
+            post.toJson(),
+          );
+      res = "success";
     } catch (e) {
-      res=e.toString();
-
+      res = e.toString();
     }
     return res;
   }

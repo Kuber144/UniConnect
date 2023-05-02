@@ -11,6 +11,7 @@ import "package:share_plus/share_plus.dart";
 import 'package:uniconnect/screens/chat_home_page.dart';
 import '../models/FirebaseHelper.dart';
 import '../models/UserModel.dart';
+import 'misc_screens/Developers.dart';
 import 'misc_screens/give_feedback.dart';
 
 class NavBar extends StatelessWidget {
@@ -300,7 +301,7 @@ class NavBar extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ReportBug(),
+                  builder: (context) => CreatorsPage(),
                 ),
               );
             },

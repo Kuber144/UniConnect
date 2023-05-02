@@ -5,9 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uniconnect/providers/providers.dart';
-import 'package:uniconnect/responsive/mobile_screen_layout.dart';
-import 'package:uniconnect/responsive/responsive_layout_screen.dart';
-import 'package:uniconnect/responsive/web_screen_layout.dart';
 import 'package:uniconnect/screens/home_page.dart';
 import 'package:uniconnect/screens/login_screen.dart';
 
@@ -43,6 +40,10 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent)
     );
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_)=>UserProvider(),
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
                 //     mobileScreenLayout: MobileScreenLayout());
                 return HomePage();
               } else if (snapshot.hasError) {
-                return Center(
+                return const Center(
                   child: Text('some internal error occurred'),
                 );
               }

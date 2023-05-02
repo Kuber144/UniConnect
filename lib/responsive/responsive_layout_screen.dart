@@ -6,6 +6,7 @@ import 'package:uniconnect/util/dimensions.dart';
 class ResponsiveLayout extends StatefulWidget {
   final Widget webScreenLayout;
   final Widget mobileScreenLayout;
+
   const ResponsiveLayout(
       {super.key,
       required this.webScreenLayout,
@@ -16,17 +17,17 @@ class ResponsiveLayout extends StatefulWidget {
 }
 
 class _ResponsiveLayoutState extends State<ResponsiveLayout> {
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     addData();
   }
 
-  addData() async{
-    UserProvider _userProvider = Provider.of(context,listen: false);
+  addData() async {
+    UserProvider _userProvider = Provider.of(context, listen: false);
     await _userProvider.refreshUser();
   }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -42,7 +43,6 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
 
   @override
   State<StatefulWidget> createState() {
-
     // TODO: implement createState
     throw UnimplementedError();
   }

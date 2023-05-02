@@ -7,11 +7,10 @@ class Offer_Announcement_Post {
   final String uid;
   final String username;
   final String profilepic;
-  final  datePublished;
+  final datePublished;
   final String postId;
 
-
-   Offer_Announcement_Post({
+  Offer_Announcement_Post({
     required this.offerPlace,
     required this.offerDesc,
     this.offerLink,
@@ -20,23 +19,20 @@ class Offer_Announcement_Post {
     required this.username,
     required this.datePublished,
     required this.postId,
-
-
   });
 
   Map<String, dynamic> toJson() => {
-    "username": username,
-    "uid": uid,
-    "postId":postId,
-    "datePublished":datePublished,
-    "profilepic":profilepic,
-    "offerLink":offerLink,
-    "offerDesc":offerDesc,
-    "offerPlace":offerPlace,
+        "username": username,
+        "uid": uid,
+        "postId": postId,
+        "datePublished": datePublished,
+        "profilepic": profilepic,
+        "offerLink": offerLink,
+        "offerDesc": offerDesc,
+        "offerPlace": offerPlace,
+      };
 
-  };
-
-  static  fromSnap(DocumentSnapshot snap) {
+  static fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
 
     return Offer_Announcement_Post(
@@ -48,7 +44,6 @@ class Offer_Announcement_Post {
       offerDesc: snapshot['offerDesc'],
       offerPlace: snapshot['offerPlace'],
       offerLink: snapshot['offerLink'],
-
     );
   }
 }

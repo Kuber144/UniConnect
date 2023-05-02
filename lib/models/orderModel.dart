@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Order_Post {
   final String order;
-  final  String place;
-  final String  price;
+  final String place;
+  final String price;
   final DateTime timeOfOrder;
-  final  String people;
+  final String people;
   final String uid;
   final String profilepic;
   final String username;
@@ -14,7 +14,7 @@ class Order_Post {
   final String desc;
   final String addnote;
 
-  const Order_Post( {
+  const Order_Post({
     required this.order,
     required this.place,
     required this.price,
@@ -28,21 +28,21 @@ class Order_Post {
     required this.postId,
     required this.addnote,
   });
-  Map<String, dynamic> toJson() => {
-    "username": username,
-    "uid": uid,
-    "order":order,
-    "place": place,
-    "price":price,
-    "people":people,
-    "desc":desc,
-    "postId":postId,
-    "datePublished":datePublished,
-    "profilepic":profilepic,
-    "addnote": addnote,
-    "timeOfOrder": timeOfOrder,
 
-  };
+  Map<String, dynamic> toJson() => {
+        "username": username,
+        "uid": uid,
+        "order": order,
+        "place": place,
+        "price": price,
+        "people": people,
+        "desc": desc,
+        "postId": postId,
+        "datePublished": datePublished,
+        "profilepic": profilepic,
+        "addnote": addnote,
+        "timeOfOrder": timeOfOrder,
+      };
 
   static fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;

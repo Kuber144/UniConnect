@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
   final String start;
-  final  String destination;
-  final String  vehicle;
+  final String destination;
+  final String vehicle;
   final DateTime timeOfDeparture;
-  final  String expectedPerHeadCharge;
+  final String expectedPerHeadCharge;
   final String uid;
   final String profilepic;
   final String username;
-  final  datePublished;
+  final datePublished;
   final String postId;
   final String exacstart;
   final String exacdest;
@@ -29,24 +29,23 @@ class Post {
     required this.addnote,
     required this.exacdest,
     required this.exacstart,
-
   });
 
   Map<String, dynamic> toJson() => {
-    "username": username,
-    "uid": uid,
-    "start":start,
-    "destination":destination,
-    "vehicle":vehicle,
-    "timeOfDeparture":timeOfDeparture,
-    "expectedPerHeadCharge":expectedPerHeadCharge,
-    "postId":postId,
-    "datePublished":datePublished,
-    "profilepic":profilepic,
-    "exacstart": exacstart,
-    "exacdest": exacdest,
-    "addnote": addnote,
-  };
+        "username": username,
+        "uid": uid,
+        "start": start,
+        "destination": destination,
+        "vehicle": vehicle,
+        "timeOfDeparture": timeOfDeparture,
+        "expectedPerHeadCharge": expectedPerHeadCharge,
+        "postId": postId,
+        "datePublished": datePublished,
+        "profilepic": profilepic,
+        "exacstart": exacstart,
+        "exacdest": exacdest,
+        "addnote": addnote,
+      };
 
   static Post fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;

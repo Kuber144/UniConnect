@@ -6,13 +6,13 @@ import '../../models/post_card_food.dart';
 import '../../util/colors.dart';
 import 'My_Announce_Food.dart';
 
-
-class AnnouncementScreen extends StatefulWidget{
+class AnnouncementScreen extends StatefulWidget {
   const AnnouncementScreen({Key? key}) : super(key: key);
 
   @override
   AnnouncementScreenState createState() => AnnouncementScreenState();
 }
+
 class AnnouncementScreenState extends State<AnnouncementScreen> {
   final TextEditingController _searchTextController = TextEditingController();
   List<QueryDocumentSnapshot<Map<String, dynamic>>> filteredDocs = [];
@@ -67,7 +67,7 @@ class AnnouncementScreenState extends State<AnnouncementScreen> {
             children: [
               Padding(
                 padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 child: TextField(
                   controller: _searchTextController,
                   onChanged: (value) {
@@ -88,86 +88,114 @@ class AnnouncementScreenState extends State<AnnouncementScreen> {
                   ),
                 ),
               ),
-              Expanded(
-              child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('Offer Announcement Posts')
-                .snapshots(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              final Timestamp currentTime = Timestamp.now();
-              const Duration duration = Duration(days: 15);
-              final filteredDocsLate = snapshot.data!.docs
-                  .where(
-                    (doc) =>
-                        doc['datePublished'] is Timestamp &&
-                        currentTime
-                                .toDate()
-                                .difference(doc['datePublished'].toDate())
-                                .compareTo(duration) >
-                            0,
-                  )
-                  .toList();
-              if (filteredDocsLate.isNotEmpty) {
-                for (final doc in filteredDocsLate) {
-                  doc.reference.delete().then((value) {
-                    // print('Document ${doc.id} deleted successfully.');
-                  }).catchError((error) {
-                    // print('Error deleting document ${doc.id}: $error');
-                  });
-                }
-              }
-              // final filteredDocs = snapshot.data!.docs.where((doc) => doc['uid'] != currentUserId).toList();
-              final filteredDocs = _searchTextController.text.isEmpty
-                  ? snapshot.data!.docs
-                  .where((doc) => doc['uid'] != currentUserId)
-                  .toList()
-                  : snapshot.data!.docs
-                  .where((doc) =>
-              doc['uid'] != currentUserId &&
-                  (doc['offerPlace'].toString().toLowerCase().contains(
-                      _searchTextController.text
-                          .toLowerCase())))
-                  .toList();
-              if (filteredDocs.isEmpty) {
-                return const Center(
-                  child: Text('No data'),
-                );
-              }
-              return Padding(
-                // width: MediaQuery.of(context).size.width*0.7,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: filteredDocs.length,
-                  itemBuilder: (context, index) => Column(
-                    children: [
-                      PostCard(
-                        snap: filteredDocs[index].data(),
-                      ),
-                      const SizedBox(
-                        height: 13,
-                      ),
-                    ],
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Material(
+                  color: Colors.white,
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            "Long Press on a post to copy the code/link",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              );
-            },
-          ),
               ),
-    ],
+              Expanded(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('Offer Announcement Posts')
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                          snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    final Timestamp currentTime = Timestamp.now();
+                    const Duration duration = Duration(days: 15);
+                    final filteredDocsLate = snapshot.data!.docs
+                        .where(
+                          (doc) =>
+                              doc['datePublished'] is Timestamp &&
+                              currentTime
+                                      .toDate()
+                                      .difference(doc['datePublished'].toDate())
+                                      .compareTo(duration) >
+                                  0,
+                        )
+                        .toList();
+                    if (filteredDocsLate.isNotEmpty) {
+                      for (final doc in filteredDocsLate) {
+                        doc.reference.delete().then((value) {
+                          // print('Document ${doc.id} deleted successfully.');
+                        }).catchError((error) {
+                          // print('Error deleting document ${doc.id}: $error');
+                        });
+                      }
+                    }
+                    // final filteredDocs = snapshot.data!.docs.where((doc) => doc['uid'] != currentUserId).toList();
+                    final filteredDocs = _searchTextController.text.isEmpty
+                        ? snapshot.data!.docs
+                            .where((doc) => doc['uid'] != currentUserId)
+                            .toList()
+                        : snapshot.data!.docs
+                            .where((doc) =>
+                                doc['uid'] != currentUserId &&
+                                (doc['offerPlace']
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(_searchTextController.text
+                                        .toLowerCase())))
+                            .toList();
+                    if (filteredDocs.isEmpty) {
+                      return const Center(
+                        child: Text('No data'),
+                      );
+                    }
+                    return Padding(
+                      // width: MediaQuery.of(context).size.width*0.7,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 25),
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: filteredDocs.length,
+                        itemBuilder: (context, index) => Column(
+                          children: [
+                            PostCard(
+                              snap: filteredDocs[index].data(),
+                            ),
+                            const SizedBox(
+                              height: 13,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
-
 
   Widget _buildPopupMenuButton(BuildContext context) {
     return PopupMenuButton<String>(

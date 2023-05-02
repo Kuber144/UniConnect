@@ -28,7 +28,7 @@ class _PostCardState extends State<PostCard> {
           color: Colors.white,
           elevation: 2,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -44,12 +44,16 @@ class _PostCardState extends State<PostCard> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => User_Profile_Page(uid: widget.snap['uid']!,),
+                              builder: (context) => User_Profile_Page(
+                                uid: widget.snap['uid']!,
+                              ),
                             ),
                           );
                         },
                         child: Text(
-                          widget.snap["username"].length > 12 ? "${widget.snap['username'].toString().substring(0,10)}..." : widget.snap["username"],
+                          widget.snap["username"].length > 12
+                              ? "${widget.snap['username'].toString().substring(0, 10)}..."
+                              : widget.snap["username"],
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -91,7 +95,8 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   child: Text(
                     widget.snap["offerDesc"],
                     style: const TextStyle(

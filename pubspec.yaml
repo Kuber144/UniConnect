@@ -94,6 +94,50 @@ flutter:
     - assets/pdf_1.png
     - assets/menu/chillout.jpeg
     - assets/menu/chillout2.jpeg
+    - assets/github.png
+    - assets/instagram.png
+    - assets/linkedin.png
+    - assets/cats/cat1.jpeg
+    - assets/cats/cat2.jpeg
+    - assets/cats/cat3.jpeg
+    - assets/cats/cat4.jpeg
+    - assets/cats/cat5.jpeg
+    - assets/cats/cat6.jpeg
+    - assets/cats/cat7.jpeg
+    - assets/cats/cat8.jpeg
+    - assets/cats/cat9.jpeg
+    - assets/cats/cat10.jpeg
+    - assets/cats/cat11.jpeg
+    - assets/cats/cat12.jpeg
+    - assets/cats/cat13.jpeg
+    - assets/cats/cat14.jpeg
+    - assets/cats/cat15.jpeg
+    - assets/cats/cat16.jpeg
+    - assets/cats/cat17.jpeg
+    - assets/cats/cat18.jpeg
+    - assets/cats/cat19.jpeg
+    - assets/cats/cat20.jpeg
+    - assets/cats/cat21.jpeg
+    - assets/cats/cat22.jpeg
+    - assets/cats/cat23.jpeg
+    - assets/cats/cat24.jpeg
+    - assets/cats/cat25.jpeg
+    - assets/cats/cat26.jpeg
+    - assets/cats/cat27.jpeg
+    - assets/cats/cat28.jpeg
+    - assets/cats/cat29.jpeg
+    - assets/cats/cat30.jpeg
+    - assets/cats/cat31.jpeg
+    - assets/cats/cat32.jpeg
+    - assets/cats/cat33.jpeg
+    - assets/cats/cat34.jpeg
+    - assets/cats/cat35.jpeg
+    - assets/cats/cat36.jpeg
+    - assets/cats/cat37.jpeg
+    - assets/cats/cat38.jpeg
+    - assets/cats/cat39.jpeg
+    - assets/cats/cat40.jpeg
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

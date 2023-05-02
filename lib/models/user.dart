@@ -12,7 +12,6 @@ class User {
   final String gradyear;
   final String phone;
 
-
   const User({
     required this.email,
     required this.uid,
@@ -26,18 +25,17 @@ class User {
     required this.phone,
   });
 
-
   Map<String, dynamic> toJson() => {
         "username": username,
         "uid": uid,
         "email": email,
         "password": password,
-    "profilepic": profilepic,
-    "bio": bio,
-    "hostel": hostel,
-    "degree": degree,
-    "gradyear": gradyear,
-    "phone": phone,
+        "profilepic": profilepic,
+        "bio": bio,
+        "hostel": hostel,
+        "degree": degree,
+        "gradyear": gradyear,
+        "phone": phone,
       };
 
   static User fromSnap(DocumentSnapshot snap) {

@@ -4,8 +4,9 @@ import 'package:uniconnect/resources/auth.methods.dart';
 import '../models/user.dart';
 
 class UserProvider with ChangeNotifier {
-   User? _user;
+  User? _user;
   final AuthMethods _authMethods = AuthMethods();
+
   User? get getUser => _user;
 
   Future<void> refreshUser() async {

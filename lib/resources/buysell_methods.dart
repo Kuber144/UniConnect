@@ -8,13 +8,13 @@ class BuySellMethods {
 
   // Upload Post
   Future<String> uploadPost(
-      String uid,
-      List<String> pic,
-      String pdtName,
-      String pdtDesc,
-      String sellingPrice,
-      String postId,
-      ) async {
+    String uid,
+    List<String> pic,
+    String pdtName,
+    String pdtDesc,
+    String sellingPrice,
+    String postId,
+  ) async {
     String res = "some error occurred";
     try {
       Buysell_Model post = Buysell_Model(

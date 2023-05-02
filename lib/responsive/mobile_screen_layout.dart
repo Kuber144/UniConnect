@@ -11,11 +11,11 @@ class MobileScreenLayout extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: blueColor,
         elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween ,
-            children: [
-          Icon(Icons.menu,
-              color: Colors.black,
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Icon(
+            Icons.menu,
+            color: Colors.black,
             size: 30,
           ),
           Container(
@@ -23,7 +23,8 @@ class MobileScreenLayout extends StatelessWidget {
             width: 40,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset('assets/logo_png.png'),),
+              child: Image.asset('assets/logo_png.png'),
+            ),
           )
         ]),
       ),
@@ -32,65 +33,82 @@ class MobileScreenLayout extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top:8),
+              margin: EdgeInsets.only(top: 8),
               child: OutlinedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                ), onPressed: () { }, child: Text('Order Food'),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {},
+                child: Text('Order Food'),
               ),
-
             ),
             Container(
-              margin: EdgeInsets.only(top:8),
+              margin: EdgeInsets.only(top: 8),
               child: OutlinedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                ), onPressed: () { }, child: Text('Carpool'),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {},
+                child: Text('Carpool'),
               ),
-
             ),
             Container(
-              margin: EdgeInsets.only(top:8),
+              margin: EdgeInsets.only(top: 8),
               child: OutlinedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                ), onPressed: () { }, child: Text('Buy And Sell Items'),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {},
+                child: Text('Buy And Sell Items'),
               ),
-
             ),
             Container(
-              margin: EdgeInsets.only(top:8),
+              margin: EdgeInsets.only(top: 8),
               child: OutlinedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                ), onPressed: () { }, child: Text('Games Section'),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {},
+                child: Text('Games Section'),
               ),
-
             ),
             Container(
-              margin: EdgeInsets.only(top:8),
+              margin: EdgeInsets.only(top: 8),
               child: OutlinedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                ), onPressed: () { }, child: Text('Notes Sharing'),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {},
+                child: Text('Notes Sharing'),
               ),
-
             ),
             Container(
-              margin: EdgeInsets.only(top:8),
+              margin: EdgeInsets.only(top: 8),
               child: OutlinedButton(
                 style: ButtonStyle(
-
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                ), onPressed: () { }, child: Text('Mess Feedback'),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.blue),
+                ),
+                onPressed: () {},
+                child: Text('Mess Feedback'),
               ),
-
             )
           ],
         ),
