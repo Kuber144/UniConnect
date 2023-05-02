@@ -28,7 +28,7 @@ class _PostCardState extends State<PostCard> {
           color: Colors.white,
           elevation: 2,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -36,21 +36,6 @@ class _PostCardState extends State<PostCard> {
                   padding: const EdgeInsets.only(left: 10, top: 10),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => User_Profile_Page(uid: widget.snap['uid']!,),
-                            ),
-                          );
-                        },
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundImage:
-                            NetworkImage(widget.snap['profilepic'] ?? ''),
-                      ),
-          ),
                       const SizedBox(
                         width: 10,
                       ),
@@ -63,14 +48,14 @@ class _PostCardState extends State<PostCard> {
                             ),
                           );
                         },
-                      child: Text(
-                        widget.snap["username"].length > 12 ? "${widget.snap['username'].toString().substring(0,10)}..." : widget.snap["username"],
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        child: Text(
+                          widget.snap["username"].length > 12 ? "${widget.snap['username'].toString().substring(0,10)}..." : widget.snap["username"],
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
                       ),
                       const SizedBox(
                         width: 10,
