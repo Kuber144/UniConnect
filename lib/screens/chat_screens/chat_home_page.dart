@@ -4,8 +4,8 @@ import 'package:uniconnect/models/ChatRoomModel.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:uniconnect/screens/chat_room_page.dart';
-import 'package:uniconnect/screens/chat_search_page.dart';
+import 'package:uniconnect/screens/chat_screens/chat_room_page.dart';
+import 'package:uniconnect/screens/chat_screens/chat_search_page.dart';
 import 'package:uniconnect/screens/home_page.dart';
 
 class Chat_HomePage extends StatefulWidget {

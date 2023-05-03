@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/widgets/hero_dialog_route.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import '../profile_screens/user_profile_page.dart';
 import 'lnfInnerPostCard.dart';
 
 class lnfPostCard extends StatefulWidget {
@@ -24,6 +26,22 @@ class _lnfPostCardState extends State<lnfPostCard> {
 
   String imageUrl = "assets/loading.gif";
   final storage = firebase_storage.FirebaseStorage.instance;
+  String _profilePicUrl="";
+  void getProfile() async{
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc( widget.snap['uid'])
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        String profilePicUrl = doc.data()!["profilepic"];
+        setState(() {
+          _profilePicUrl = profilePicUrl;
+        });
+      }
+    });
+
+  }
 
   @override
   void initState() {
@@ -34,6 +52,7 @@ class _lnfPostCardState extends State<lnfPostCard> {
       imageUrl = PostImages![0];
     });
     getUserDetails(widget.snap['uid']);
+    getProfile();
   }
 
   List<String>? getPic() {
@@ -94,6 +113,64 @@ class _lnfPostCardState extends State<lnfPostCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => User_Profile_Page(
+                              uid: widget.snap['uid']!,
+                            ),
+                          ),
+                        );
+                      },
+                      child: CircleAvatar(
+                        radius: 22,
+                        backgroundImage:
+                        NetworkImage(_profilePicUrl),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => User_Profile_Page(
+                                  uid: widget.snap['uid']!,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            name,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          DateFormat.yMMMd().format(
+                            widget.snap['datePublished'].toDate(),
+                          ),
+                          style: const TextStyle(
+                              fontSize: 12, color: mobileSearchColor),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 16),

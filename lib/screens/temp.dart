@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() => runApp(MaterialApp(
-  home: Home(),
-  debugShowCheckedModeBanner: false,
-));
+      home: Home(),
+      debugShowCheckedModeBanner: false,
+    ));
 
 class Home extends StatefulWidget {
   @override
@@ -13,7 +13,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   XFile? image;
 
   final ImagePicker picker = ImagePicker();
@@ -34,7 +33,7 @@ class _HomeState extends State<Home> {
         builder: (BuildContext context) {
           return AlertDialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             title: Text('Please choose media to select'),
             content: Container(
               height: MediaQuery.of(context).size.height / 6,
@@ -96,22 +95,22 @@ class _HomeState extends State<Home> {
             //if image null show text
             image != null
                 ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.file(
-                  //to show image, you type like this.
-                  File(image!.path),
-                  fit: BoxFit.cover,
-                  width: MediaQuery.of(context).size.width,
-                  height: 300,
-                ),
-              ),
-            )
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        //to show image, you type like this.
+                        File(image!.path),
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width,
+                        height: 300,
+                      ),
+                    ),
+                  )
                 : Text(
-              "No Image",
-              style: TextStyle(fontSize: 20),
-            )
+                    "No Image",
+                    style: TextStyle(fontSize: 20),
+                  )
           ],
         ),
       ),

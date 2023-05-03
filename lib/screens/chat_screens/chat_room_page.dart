@@ -7,7 +7,8 @@ import 'package:uniconnect/models/ChatRoomModel.dart';
 import 'package:uniconnect/models/MessageModel.dart';
 import 'package:uniconnect/models/UserModel.dart';
 
-import '../main.dart';
+import '../../main.dart';
+import '../profile_screens/user_profile_page.dart';
 
 class Chat_Room_Page extends StatefulWidget {
   final UserModel targetUser;
@@ -66,15 +67,38 @@ class _Chat_Room_PageState extends State<Chat_Room_Page> {
       appBar: AppBar(
         title: Row(
           children: [
-            CircleAvatar(
-              backgroundColor: Colors.grey[300],
-              backgroundImage:
-                  NetworkImage(widget.targetUser.profilepic.toString()),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => User_Profile_Page(
+                      uid: widget.targetUser.uid!,
+                    ),
+                  ),
+                );
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.grey[300],
+                backgroundImage:
+                    NetworkImage(widget.targetUser.profilepic.toString()),
+              ),
             ),
             const SizedBox(
               width: 10,
             ),
-            Text(widget.targetUser.username.toString()),
+            GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => User_Profile_Page(
+                        uid: widget.targetUser.uid!,
+                      ),
+                    ),
+                  );
+                },
+                child: Text(widget.targetUser.username.toString())),
           ],
         ),
       ),
@@ -113,27 +137,32 @@ class _Chat_Room_PageState extends State<Chat_Room_Page> {
                                     ? MainAxisAlignment.end
                                     : MainAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                      horizontal: 10,
-                                    ),
-                                    margin: const EdgeInsets.symmetric(
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: (currentMessage.sender ==
-                                              widget.userModel.uid)
-                                          ? Colors.grey
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                      borderRadius: BorderRadius.circular(7),
-                                    ),
-                                    child: Text(
-                                      currentMessage.text.toString(),
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                  Flexible(
+                                    child: new Container(
+                                      constraints:
+                                          BoxConstraints(maxWidth: 300),
+                                      // width:200,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 10,
+                                      ),
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: (currentMessage.sender ==
+                                                widget.userModel.uid)
+                                            ? Colors.grey
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                        borderRadius: BorderRadius.circular(7),
+                                      ),
+                                      child: new Text(
+                                        currentMessage.text.toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 class PdfViewerScreen extends StatefulWidget {
   final String pdfUrl;
   final String pdfName;
-  const PdfViewerScreen({Key? key, required this.pdfUrl, required this.pdfName}) : super(key: key);
+
+  const PdfViewerScreen({Key? key, required this.pdfUrl, required this.pdfName})
+      : super(key: key);
 
   @override
   State<PdfViewerScreen> createState() => _PdfViewerScreenState();
@@ -37,11 +39,11 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
       ),
       body: document != null
           ? PDFViewer(
-        document: document!,
-      )
+              document: document!,
+            )
           : const Center(
-        child: CircularProgressIndicator(),
-      ),
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }

@@ -11,7 +11,7 @@ import '../../main.dart';
 import '../../models/ChatRoomModel.dart';
 import '../../models/FirebaseHelper.dart';
 import '../../models/UserModel.dart';
-import '../chat_room_page.dart';
+import '../chat_screens/chat_room_page.dart';
 import '../profile_screens/user_profile_page.dart';
 
 class PostCard extends StatefulWidget {

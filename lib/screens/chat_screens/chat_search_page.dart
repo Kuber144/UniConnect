@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uniconnect/models/UserModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:uniconnect/screens/chat_room_page.dart';
+import 'package:uniconnect/screens/chat_screens/chat_room_page.dart';
 import 'package:uniconnect/models/ChatRoomModel.dart';
 
-import '../main.dart';
-import 'home_page.dart';
+import '../../main.dart';
+import '../home_page.dart';
 
 class Chat_searchPage extends StatefulWidget {
   final UserModel userModel;

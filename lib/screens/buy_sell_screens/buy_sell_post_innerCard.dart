@@ -11,7 +11,7 @@ import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
 import 'package:uniconnect/util/slideshow.dart';
-import '../chat_room_page.dart';
+import '../chat_screens/chat_room_page.dart';
 import '../../main.dart';
 import '../profile_screens/user_profile_page.dart';
 
@@ -64,6 +64,10 @@ class _Add_PopupCard extends State<AddPopupCard> {
   final List<String> images;
   final Key key;
 
+  void initState(){
+    super.initState();
+    getProfile();
+  }
   _Add_PopupCard(
       {required this.key,
       required this.hello,
@@ -115,6 +119,22 @@ class _Add_PopupCard extends State<AddPopupCard> {
     List<String>? stringList =
         dynamicList.map((item) => item.toString()).toList();
     return stringList;
+  }
+  String _profilePicUrl="";
+  void getProfile() async{
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc( widget.snap['uid'])
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        String profilePicUrl = doc.data()!["profilepic"];
+        setState(() {
+          _profilePicUrl = profilePicUrl;
+        });
+      }
+    });
+
   }
 
   Future<Map<String, dynamic>?> getUserDetails(String uid) async {
@@ -251,28 +271,53 @@ class _Add_PopupCard extends State<AddPopupCard> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => User_Profile_Page(
-                              uid: widget.snap['uid']!,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => User_Profile_Page(
+                                  uid: widget.snap['uid']!,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Seller : $username',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
                             ),
+                            textAlign: TextAlign.center,
                           ),
-                        );
-                      },
-                      child: Text(
-                        'Seller : $username',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => User_Profile_Page(
+                                  uid: widget.snap['uid']!,
+                                ),
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 22,
+                            backgroundImage:
+                            NetworkImage(_profilePicUrl),
+                          ),
+                        ),
+                      ),
+
+                    ],
                   ),
                   const SizedBox(
                     height: 5,

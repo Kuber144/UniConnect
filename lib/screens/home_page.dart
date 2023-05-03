@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
 import 'package:uniconnect/screens/carpool_screens/carpool_home_page.dart';
-import 'package:uniconnect/screens/chat_home_page.dart';
+import 'package:uniconnect/screens/chat_screens/chat_home_page.dart';
 import 'package:uniconnect/screens/food_order_screens/food_home_page.dart';
 import 'package:uniconnect/screens/lnf_screens/lnf_home_page.dart';
 import 'package:uniconnect/screens/mess_feedback_screens/mess_feedback_feed.dart';
@@ -13,7 +13,7 @@ import 'package:uniconnect/util/slideshow.dart';
 import 'package:flutter/material.dart';
 import 'package:uniconnect/screens/NavBar.dart';
 import 'buy_sell_screens/buy_sell_home_page.dart';
-import 'notes_home_page.dart';
+import 'notes_screens/notes_home_page.dart';
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   @override

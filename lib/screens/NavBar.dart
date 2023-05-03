@@ -8,7 +8,7 @@ import 'package:uniconnect/screens/misc_screens/ReportBug.dart';
 import 'package:uniconnect/screens/misc_screens/request_feature.dart';
 import 'package:uniconnect/screens/profile_screens/profile_view.dart';
 import "package:share_plus/share_plus.dart";
-import 'package:uniconnect/screens/chat_home_page.dart';
+import 'package:uniconnect/screens/chat_screens/chat_home_page.dart';
 import '../models/FirebaseHelper.dart';
 import '../models/UserModel.dart';
 import 'misc_screens/Developers.dart';
@@ -64,9 +64,8 @@ class NavBar extends StatelessWidget {
         onPressed: () {
           FirebaseAuth.instance.signOut();
           Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) => const LoginScreen()
-              ), (route) => false);
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (route) => false);
         },
       );
 
@@ -88,6 +87,7 @@ class NavBar extends StatelessWidget {
         },
       );
     }
+
     User? user = FirebaseAuth.instance.currentUser;
     String accountEmail = "example@gmail.com";
 
@@ -107,8 +107,8 @@ class NavBar extends StatelessWidget {
                   .doc(FirebaseAuth.instance.currentUser?.uid)
                   .snapshots(),
               builder: (BuildContext context,
-                  AsyncSnapshot<
-                      DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                      snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Text('Loading...');
                 }
@@ -125,8 +125,8 @@ class NavBar extends StatelessWidget {
                   .doc(FirebaseAuth.instance.currentUser?.uid)
                   .snapshots(),
               builder: (BuildContext context,
-                  AsyncSnapshot<
-                      DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                      snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return SizedBox(
                     width: 90,
@@ -142,7 +142,8 @@ class NavBar extends StatelessWidget {
                   child: ClipOval(
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
+                        Navigator.push(
+                            context,
                             PageRouteBuilder(
                               transitionDuration: Duration(milliseconds: 500),
                               pageBuilder: (BuildContext context,
@@ -150,13 +151,13 @@ class NavBar extends StatelessWidget {
                                   Animation<double> secAnimation) {
                                 return const ProfileView();
                               },
-                              transitionsBuilder: (context, animation,
-                                  secAnimation, child) {
+                              transitionsBuilder:
+                                  (context, animation, secAnimation, child) {
                                 var begin = Offset(-1.0, 0.0);
                                 var end = Offset.zero;
                                 var curve = Curves.ease;
-                                var tween = Tween(begin: begin, end: end).chain(
-                                    CurveTween(curve: curve));
+                                var tween = Tween(begin: begin, end: end)
+                                    .chain(CurveTween(curve: curve));
                                 var curvedAnimation = CurvedAnimation(
                                     parent: animation, curve: curve);
                                 return SlideTransition(
@@ -164,22 +165,20 @@ class NavBar extends StatelessWidget {
                                   child: child,
                                 );
                               },
-                            )
-                        );
+                            ));
                       },
                       child: CachedNetworkImage(
                         imageUrl: profileImageUrl,
                         width: 90,
                         height: 90,
-                        placeholder: (context, url) =>
-                            ClipOval(
-                              child: Image.asset(
-                                'assets/loading.gif',
-                                width: 90,
-                                height: 90,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                        placeholder: (context, url) => ClipOval(
+                          child: Image.asset(
+                            'assets/loading.gif',
+                            width: 90,
+                            height: 90,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -192,14 +191,16 @@ class NavBar extends StatelessWidget {
               image: DecorationImage(
                   fit: BoxFit.fill,
                   image: AssetImage(
-                    'assets/background/navbar_bg.jpg',)),
+                    'assets/background/navbar_bg.jpg',
+                  )),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.account_circle_sharp),
             title: const Text('Profile'),
             onTap: () {
-              Navigator.push(context,
+              Navigator.push(
+                  context,
                   PageRouteBuilder(
                     transitionDuration: Duration(milliseconds: 500),
                     pageBuilder: (BuildContext context,
@@ -207,22 +208,21 @@ class NavBar extends StatelessWidget {
                         Animation<double> secAnimation) {
                       return const ProfileView();
                     },
-                    transitionsBuilder: (context, animation, secAnimation,
-                        child) {
+                    transitionsBuilder:
+                        (context, animation, secAnimation, child) {
                       var begin = Offset(-1.0, 0.0);
                       var end = Offset.zero;
                       var curve = Curves.ease;
-                      var tween = Tween(begin: begin, end: end).chain(
-                          CurveTween(curve: curve));
-                      var curvedAnimation = CurvedAnimation(
-                          parent: animation, curve: curve);
+                      var tween = Tween(begin: begin, end: end)
+                          .chain(CurveTween(curve: curve));
+                      var curvedAnimation =
+                          CurvedAnimation(parent: animation, curve: curve);
                       return SlideTransition(
                         position: tween.animate(curvedAnimation),
                         child: child,
                       );
                     },
-                  )
-              );
+                  ));
             },
           ),
           // ListTile(
@@ -235,15 +235,17 @@ class NavBar extends StatelessWidget {
             title: const Text('Chat'),
             onTap: () async {
               User? currentUser = FirebaseAuth.instance.currentUser;
-              if(currentUser != null) {
-                UserModel? thisUserModel =  await FirebaseHelper.getUserModelById(currentUser.uid);
-                if(thisUserModel != null){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Chat_HomePage(userModel: thisUserModel, firebaseuser: currentUser),
-                      ),
-                    );
+              if (currentUser != null) {
+                UserModel? thisUserModel =
+                    await FirebaseHelper.getUserModelById(currentUser.uid);
+                if (thisUserModel != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Chat_HomePage(
+                          userModel: thisUserModel, firebaseuser: currentUser),
+                    ),
+                  );
                 }
               }
             },
@@ -263,16 +265,16 @@ class NavBar extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => MyWebScreen(
-                    url: "https://docs.google.com/forms/d/e/1FAIpQLSe7IAFAfPyFgW8K7nvocYAk_v7Kr8KHs3yvOQzQ5wsAAtc3Fg/viewform?usp=sf_link",
-                    // url: 'https://lnf.iiita.ac.in',
-                  )
-              ));
+                        url:
+                            "https://docs.google.com/forms/d/e/1FAIpQLSe7IAFAfPyFgW8K7nvocYAk_v7Kr8KHs3yvOQzQ5wsAAtc3Fg/viewform?usp=sf_link",
+                        // url: 'https://lnf.iiita.ac.in',
+                      )));
             },
           ),
           ListTile(
             leading: Icon(Icons.lightbulb_outline),
             title: Text('Request a feature'),
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -284,7 +286,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.bug_report),
             title: Text('Report a bug'),
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -297,7 +299,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.code),
             title: Text('Creators'),
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(

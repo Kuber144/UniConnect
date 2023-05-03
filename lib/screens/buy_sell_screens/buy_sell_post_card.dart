@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/widgets/hero_dialog_route.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import '../../util/colors.dart';
+import '../profile_screens/user_profile_page.dart';
 import 'buy_sell_post_innerCard.dart';
 
 class BuySellPostCard extends StatefulWidget {
@@ -34,6 +37,23 @@ class _BuySellPostCardState extends State<BuySellPostCard> {
       imageUrl = PostImages![0];
     });
     getUserDetails(widget.snap['uid']);
+    getProfile();
+  }
+  String _profilePicUrl="";
+  void getProfile() async{
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc( widget.snap['uid'])
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        String profilePicUrl = doc.data()!["profilepic"];
+        setState(() {
+          _profilePicUrl = profilePicUrl;
+        });
+      }
+    });
+
   }
 
   List<String>? getPic() {
@@ -95,6 +115,70 @@ class _BuySellPostCardState extends State<BuySellPostCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => User_Profile_Page(
+                                uid: widget.snap['uid']!,
+                              ),
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 22,
+                          backgroundImage:
+                          NetworkImage(_profilePicUrl),
+                        ),
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => User_Profile_Page(
+                                    uid: widget.snap['uid']!,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        Text(
+                          DateFormat.yMMMd().format(
+                            widget.snap['datePublished'].toDate(),
+                          ),
+                          style: const TextStyle(
+                              fontSize: 12, color: mobileSearchColor),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+
+                  ],
+                ),
+              ),
+
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 16),

@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:uniconnect/resources/auth.methods.dart';
-import 'package:uniconnect/responsive/mobile_screen_layout.dart';
 import 'package:uniconnect/responsive/responsive_layout_screen.dart';
 import 'package:uniconnect/responsive/web_screen_layout.dart';
 import 'package:uniconnect/screens/home_page.dart';
@@ -21,8 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
-
-
 
   @override
   void dispose() {
@@ -66,25 +64,27 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
           child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/loginbg.jpg'),
-                fit: BoxFit.cover,
-              )
-            ),
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+          image: AssetImage('assets/loginbg.jpg'),
+          fit: BoxFit.cover,
+        )),
         padding: const EdgeInsets.symmetric(horizontal: 32),
         width: double.infinity,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Flexible(flex: 3, child: SvgPicture.asset(
-            'assets/logo.svg',
-            // height: 1000,
-            // matchTextDirection: false,
-            // allowDrawingOutsideViewBox: true,
-            // height: 3205,
-            placeholderBuilder: (context)=> const CircularProgressIndicator(),
-            // fit: BoxFit.contain,
-            // alignment: Alignment.center,
-          )),
+          Flexible(
+              flex: 3,
+              child: SvgPicture.asset(
+                'assets/logo.svg',
+                // height: 1000,
+                // matchTextDirection: false,
+                // allowDrawingOutsideViewBox: true,
+                // height: 3205,
+                placeholderBuilder: (context) =>
+                    const CircularProgressIndicator(),
+                // fit: BoxFit.contain,
+                // alignment: Alignment.center,
+              )),
 
           // const SizedBox(height: 0),
           TextFieldInput(
@@ -123,6 +123,50 @@ class _LoginScreenState extends State<LoginScreen> {
                   : const Text('Log in'),
             ),
           ),
+          Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: TextButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      String email = '';
+                      return AlertDialog(
+                        title: const Text('Forgot Password'),
+                        content: TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: 'Enter your email',
+                          ),
+                          onChanged: (value) {
+                            email = value;
+                          },
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Call Firebase Auth API to send forgot password email
+                              FirebaseAuth.instance
+                                  .sendPasswordResetEmail(email: email);
+                              showSnackBar(
+                                  "Email Sent! Please check your span folder if not recieved.",
+                                  context);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Send'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: const Text('Forgot Password? Click here!'),
+              )),
           const SizedBox(
             height: 12,
           ),

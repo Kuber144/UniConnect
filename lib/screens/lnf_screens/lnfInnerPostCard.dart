@@ -8,7 +8,7 @@ import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
 import 'package:uniconnect/models/UserModel.dart';
-import 'package:uniconnect/screens/chat_room_page.dart';
+import 'package:uniconnect/screens/chat_screens/chat_room_page.dart';
 import '../../main.dart';
 import '../profile_screens/user_profile_page.dart';
 
