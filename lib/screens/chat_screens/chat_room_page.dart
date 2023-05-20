@@ -31,9 +31,27 @@ class Chat_Room_Page extends StatefulWidget {
 class _Chat_Room_PageState extends State<Chat_Room_Page> {
   TextEditingController messageController = TextEditingController();
 
+  void CheckSeen()
+  async
+  {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    String? lastuid=widget.chatroom.lastuid;
+    if(uid!=lastuid) {
+      widget.chatroom.isseen=true;
+      FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(widget.chatroom.chatroomid)
+          .set(widget.chatroom.toMap());
+    }
+  }
+  void initState(){
+    super.initState();
+    CheckSeen();
+  }
   void sendMessage() async {
     String msg = messageController.text.trim();
     messageController.clear();
+    String uid = FirebaseAuth.instance.currentUser!.uid;
 
     if (msg != "") {
       //  send the message
@@ -52,18 +70,24 @@ class _Chat_Room_PageState extends State<Chat_Room_Page> {
           .set(newMessage.toMap());
 
       widget.chatroom.lastMessage = msg;
+      widget.chatroom.isseen=false;
+      widget.chatroom.lastuid=uid;
       FirebaseFirestore.instance
           .collection("chatrooms")
           .doc(widget.chatroom.chatroomid)
           .set(widget.chatroom.toMap());
-
       // log("Message Sent :)");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+          CheckSeen();
+          return true;
+        },
+    child: Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
@@ -138,7 +162,7 @@ class _Chat_Room_PageState extends State<Chat_Room_Page> {
                                     : MainAxisAlignment.start,
                                 children: [
                                   Flexible(
-                                    child: new Container(
+                                    child: Container(
                                       constraints:
                                           BoxConstraints(maxWidth: 300),
                                       // width:200,
@@ -158,7 +182,7 @@ class _Chat_Room_PageState extends State<Chat_Room_Page> {
                                                 .secondary,
                                         borderRadius: BorderRadius.circular(7),
                                       ),
-                                      child: new Text(
+                                      child: Text(
                                         currentMessage.text.toString(),
                                         style: const TextStyle(
                                             color: Colors.white),
@@ -220,6 +244,7 @@ class _Chat_Room_PageState extends State<Chat_Room_Page> {
           ),
         ),
       ),
+    ),
     );
   }
 }

@@ -293,7 +293,10 @@ class _lnf_Items extends State<lnfUploadScreen> {
       showSnackBar("Fields cannot be empty", context);
       return false;
     }
-
+    if (images!.isEmpty) {
+      showSnackBar("Please select at least one image.", context);
+      return false; // Return from the method without proceeding with the upload
+    }
     return true;
   }
 }

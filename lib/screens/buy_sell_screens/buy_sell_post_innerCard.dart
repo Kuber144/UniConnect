@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uniconnect/models/ChatRoomModel.dart';
+import 'package:uniconnect/models/MessageModel.dart';
 import 'package:uniconnect/util/colors.dart';
 import 'package:uniconnect/widgets/custom_rect_tween.dart';
 import 'package:uniconnect/models/FirebaseHelper.dart';
@@ -100,6 +101,8 @@ class _Add_PopupCard extends State<AddPopupCard> {
       ChatRoomModel newChatroom = ChatRoomModel(
         chatroomid: uuid.v1(),
         lastMessage: "",
+        isseen: false,
+        lastuid: "",
         participants: {
           thisUserModel!.uid.toString(): true,
           targetUser.uid.toString(): true,

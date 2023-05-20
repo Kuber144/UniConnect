@@ -40,31 +40,30 @@ class _Chat_HomePageState extends State<Chat_HomePage> {
               if (snapshot.connectionState == ConnectionState.active) {
                 if (snapshot.hasData) {
                   QuerySnapshot chatRoomSnapshot =
-                      snapshot.data as QuerySnapshot;
+                  snapshot.data as QuerySnapshot;
 
                   return ListView.builder(
                     itemCount: chatRoomSnapshot.docs.length,
                     itemBuilder: (context, index) {
                       ChatRoomModel chatRoomModel = ChatRoomModel.fromMap(
                           chatRoomSnapshot.docs[index].data()
-                              as Map<String, dynamic>);
+                          as Map<String, dynamic>);
 
                       Map<String, dynamic>? participants =
                           chatRoomModel.participants;
 
                       List<String> participantkeys =
-                          participants!.keys.toList();
+                      participants!.keys.toList();
                       participantkeys.remove(widget.userModel.uid);
 
                       return FutureBuilder(
                         future:
-                            FirebaseHelper.getUserModelById(participantkeys[0]),
+                        FirebaseHelper.getUserModelById(participantkeys[0]),
                         builder: (context, userData) {
                           if (userData.connectionState ==
                               ConnectionState.done) {
                             if (userData.data != null) {
                               UserModel targetUser = userData.data as UserModel;
-
                               return ListTile(
                                 onTap: () {
                                   Navigator.push(
@@ -84,22 +83,29 @@ class _Chat_HomePageState extends State<Chat_HomePage> {
                                 ),
                                 title: Text(targetUser.username.toString()),
                                 subtitle: (chatRoomModel.lastMessage
-                                            .toString() !=
-                                        "")
-                                    ? Text(chatRoomModel.lastMessage.toString())
+                                    .toString() != "")
+                                    ? Text(chatRoomModel.lastMessage
+                                    .toString()
+                                    .length > 40
+                                    ? "${chatRoomModel.lastMessage.toString()
+                                    .substring(0, 40)}..."
+                                    : chatRoomModel.lastMessage.toString())
                                     : Text(
-                                        "Say Hello :)",
-                                        style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .secondary),
-                                      ),
+                                  "Say Hello :)",
+                                  style: TextStyle(
+                                      color: Theme
+                                          .of(context)
+                                          .colorScheme
+                                          .secondary),
+                                ),
+                                trailing: (chatRoomModel.isseen ==
+                                    false) ? Icon(Icons.circle, color: Colors.blue,size: 15,) : const SizedBox(),
                               );
-                            } else {
-                              return Container();
-                            }
                           } else {
-                            return Container();
+                          return Container();
+                          }
+                          } else {
+                          return Container();
                           }
                         },
                       );

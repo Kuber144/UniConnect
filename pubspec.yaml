@@ -27,6 +27,8 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  flutter_local_notifications: ^14.0.0+1
+  firebase_messaging: ^14.4.1
   permission_handler: ^10.2.0
   carousel_slider: ^4.2.1
   webview_flutter: ^2.4.0

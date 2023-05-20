@@ -69,17 +69,18 @@ class FeedScreenState extends State<FeedScreen> {
                     }
                     final filteredDocs = _searchTextController.text.isEmpty
                         ? snapshot.data!.docs
-                            .where((doc) => doc['uid'] != currentUserId)
-                            .toList()
+                        .where((doc) => doc['uid'] != currentUserId)
+                        .toList()
                         : snapshot.data!.docs
-                            .where((doc) =>
-                                doc['uid'] != currentUserId &&
-                                doc['pdtName']
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(_searchTextController.text
-                                        .toLowerCase()))
-                            .toList();
+                        .where((doc) =>
+                    doc['uid'] != currentUserId &&
+                        doc['pdtName']
+                            .toString()
+                            .toLowerCase()
+                            .contains(_searchTextController.text.toLowerCase()))
+                        .toList();
+                    // filteredDocs.sort((a, b) => a['datePublished'].compareTo(b['datePublished']));
+                    filteredDocs.sort((a, b) => b['datePublished'].compareTo(a['datePublished']));
                     if (filteredDocs.isEmpty) {
                       return const Center(
                         child: Text('No data'),

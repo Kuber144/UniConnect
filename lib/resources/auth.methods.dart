@@ -34,6 +34,10 @@ class AuthMethods {
 
     try {
       if (email.isNotEmpty && username.isNotEmpty && password.isNotEmpty) {
+        if (!email.endsWith('@iiita.ac.in')) {
+          res = "Please enter your iiita.ac.in email address.";
+          return res;
+        }
         //register user
         UserCredential cred = await auth.createUserWithEmailAndPassword(
             email: email, password: password);
@@ -74,6 +78,10 @@ class AuthMethods {
     String res = "Some error occurred";
     try {
       if (email.isNotEmpty && password.isNotEmpty) {
+        // if (!email.endsWith('@iiita.ac.in')) {
+        //   res = "Please enter your iiita.ac.in email address.";
+        //   return res;
+        // }
         UserCredential cred = await auth.signInWithEmailAndPassword(
             email: email, password: password);
 
@@ -91,4 +99,5 @@ class AuthMethods {
     }
     return res;
   }
+
 }

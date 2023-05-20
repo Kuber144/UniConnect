@@ -47,6 +47,8 @@ class _Chat_searchPageState extends State<Chat_searchPage> {
       ChatRoomModel newChatroom = ChatRoomModel(
         chatroomid: uuid.v1(),
         lastMessage: "",
+        lastuid: "",
+        isseen: false,
         participants: {
           widget.userModel.uid.toString(): true,
           targetUser.uid.toString(): true,

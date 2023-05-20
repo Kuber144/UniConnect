@@ -279,6 +279,9 @@ class _MessFeedState extends State<Mess_Feed> {
                       return doc['phase'] == phase &&
                           checkHostel(doc['hostel']);
                     }).toList();
+                    filteredDocs.sort((a, b) => b['datePublished'].compareTo(a['datePublished']));
+                    // filteredDocs.sort((a, b) => b['publishedDate'].compareTo(a['publishedDate']));
+
 
                     if (filteredDocs.isEmpty) {
                       return const Center(

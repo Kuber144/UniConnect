@@ -98,6 +98,8 @@ class _Add_PopupCard extends State<lnfInnerPostCard> {
       ChatRoomModel newChatroom = ChatRoomModel(
         chatroomid: uuid.v1(),
         lastMessage: "",
+        isseen: false,
+        lastuid: "",
         participants: {
           thisUserModel!.uid.toString(): true,
           targetUser.uid.toString(): true,

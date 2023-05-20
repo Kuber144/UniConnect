@@ -129,6 +129,8 @@ class OrderFeedState extends State<Order_Feed> {
                             _searchTextController.text
                                 .toLowerCase())))
                         .toList();
+                    // filteredDocs.sort((a, b) => a['datePublished'].compareTo(b['datePublished']));
+                    filteredDocs.sort((a, b) => b['datePublished'].compareTo(a['datePublished']));
                     if (filteredDocs.isEmpty) {
                       return const Center(
                         child: Text('No data'),

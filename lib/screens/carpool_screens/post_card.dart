@@ -48,6 +48,8 @@ class _PostCardState extends State<PostCard> {
       ChatRoomModel newChatroom = ChatRoomModel(
         chatroomid: uuid.v1(),
         lastMessage: "",
+        isseen: false,
+        lastuid: "",
         participants: {
           thisUserModel!.uid.toString(): true,
           targetUser.uid.toString(): true,
